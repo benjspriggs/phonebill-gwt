@@ -1,0 +1,3 @@
+# Module phonebill
+# RPC service class, partial path of RPC policy file
+edu.pdx.cs410J.bspriggs.client.PhoneBillService, A6C1095AB98B28203E527A27B7FBBF44.gwt.rpc

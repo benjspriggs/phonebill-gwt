@@ -1,0 +1,2 @@
+serviceClass: edu.pdx.cs410J.bspriggs.client.PhoneBillService
+path: A6C1095AB98B28203E527A27B7FBBF44.gwt.rpc
