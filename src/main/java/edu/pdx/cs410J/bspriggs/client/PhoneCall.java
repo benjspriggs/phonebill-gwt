@@ -1,17 +1,29 @@
 package edu.pdx.cs410J.bspriggs.client;
 
+import com.em.validation.client.constraints.NotEmpty;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DefaultDateTimeFormatInfo;
 import edu.pdx.cs410J.AbstractPhoneCall;
 import edu.pdx.cs410J.ParserException;
 
+import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 public class PhoneCall extends AbstractPhoneCall {
+    @NotEmpty
+    @Pattern(regexp=phoneNumberPattern)
     private final String caller;
+
+    @NotEmpty
+    @Pattern(regexp=phoneNumberPattern)
     private final String callee;
-    private final Date startTime;
-    private final Date endTime;
+
+    @NotEmpty
+    private final String startTime;
+
+    @NotEmpty
+    private final String endTime;
+
     private static final String phoneNumberPattern = "\\d{3}-\\d{3}-\\d{4}";
     private static final String dateFormat = "mm/dd/yyyy hh:mm";
 
@@ -19,16 +31,12 @@ public class PhoneCall extends AbstractPhoneCall {
        this("","","","");
     }
 
-    public PhoneCall(String caller, String callee, String startDateAndTime, String endDateAndTime) throws ParserException {
-        this.caller = validatePhoneNumber(caller);
-        this.callee = validatePhoneNumber(callee);
+    public PhoneCall(String caller, String callee, String startDateAndTime, String endDateAndTime) {
+        this.caller = caller;
+        this.callee = callee;
+        this.startTime = startDateAndTime;
+        this.endTime = endDateAndTime;
 
-        this.startTime = parseDate(startDateAndTime);
-        this.endTime = parseDate(endDateAndTime);
-
-        if (startTime.compareTo(endTime) > 0) {
-            throw new ParserException("Start time for the call was after end time.");
-        }
     }
 
     private Date parseDate(String startDateAndTime) {
@@ -37,14 +45,6 @@ public class PhoneCall extends AbstractPhoneCall {
 
     public static String formatDate(Date start) {
         return new DateTimeFormat(dateFormat, new DefaultDateTimeFormatInfo()){}.format(start);
-    }
-
-  private String validatePhoneNumber(String in) throws ParserException {
-        if (!in.matches(phoneNumberPattern)) {
-            throw new ParserException("Invalid phone number " + in);
-        }
-
-        return in;
     }
 
     @Override
@@ -59,21 +59,21 @@ public class PhoneCall extends AbstractPhoneCall {
 
     @Override
     public Date getStartTime() {
-        return startTime;
+        return parseDate(startTime);
     }
 
     @Override
     public String getStartTimeString() {
-        return formatDate(startTime);
+        return startTime;
     }
 
     @Override
     public Date getEndTime() {
-        return endTime;
+        return parseDate(endTime);
     }
 
     @Override
     public String getEndTimeString() {
-        return formatDate(endTime);
+        return endTime;
     }
 }
