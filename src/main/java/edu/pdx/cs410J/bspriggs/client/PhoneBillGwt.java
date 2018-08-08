@@ -5,13 +5,10 @@ import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.dom.client.ClickEvent;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
-import com.google.gwt.user.client.ui.RootPanel;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
 
 import java.util.Collection;
 import java.util.logging.Level;
@@ -39,12 +36,7 @@ public class PhoneBillGwt implements EntryPoint {
   Button showClientSideExceptionButton;
   
   public PhoneBillGwt() {
-    this(new Alerter() {
-      @Override
-      public void alert(String message) {
-        Window.alert(message);
-      }
-    });
+    this(Window::alert);
   }
 
   @VisibleForTesting
@@ -84,36 +76,16 @@ public class PhoneBillGwt implements EntryPoint {
 
   private void addWidgets(VerticalPanel panel) {
     showPhoneBillButton = new Button("Show Phone Bill");
-    showPhoneBillButton.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent clickEvent) {
-        showPhoneBill();
-      }
-    });
+    showPhoneBillButton.addClickHandler(clickEvent -> showPhoneBill());
 
     showUndeclaredExceptionButton = new Button("Show undeclared exception");
-    showUndeclaredExceptionButton.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent clickEvent) {
-        showUndeclaredException();
-      }
-    });
+    showUndeclaredExceptionButton.addClickHandler(clickEvent -> showUndeclaredException());
 
     showDeclaredExceptionButton = new Button("Show declared exception");
-    showDeclaredExceptionButton.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent clickEvent) {
-        showDeclaredException();
-      }
-    });
+    showDeclaredExceptionButton.addClickHandler(clickEvent -> showDeclaredException());
 
     showClientSideExceptionButton= new Button("Show client-side exception");
-    showClientSideExceptionButton.addClickHandler(new ClickHandler() {
-      @Override
-      public void onClick(ClickEvent clickEvent) {
-        throwClientSideException();
-      }
-    });
+    showClientSideExceptionButton.addClickHandler(clickEvent -> throwClientSideException());
 
     panel.add(showPhoneBillButton);
     panel.add(showUndeclaredExceptionButton);
@@ -128,53 +100,53 @@ public class PhoneBillGwt implements EntryPoint {
 
   private void showUndeclaredException() {
     logger.info("Calling throwUndeclaredException");
-    phoneBillService.throwUndeclaredException(new AsyncCallback<Void>() {
-      @Override
-      public void onFailure(Throwable ex) {
-        alertOnException(ex);
-      }
+    phoneBillService.throwUndeclaredException(new AsyncCallback<>() {
+        @Override
+        public void onFailure(Throwable ex) {
+            alertOnException(ex);
+        }
 
-      @Override
-      public void onSuccess(Void aVoid) {
-        alerter.alert("This shouldn't happen");
-      }
+        @Override
+        public void onSuccess(Void aVoid) {
+            alerter.alert("This shouldn't happen");
+        }
     });
   }
 
   private void showDeclaredException() {
     logger.info("Calling throwDeclaredException");
-    phoneBillService.throwDeclaredException(new AsyncCallback<Void>() {
-      @Override
-      public void onFailure(Throwable ex) {
-        alertOnException(ex);
-      }
+    phoneBillService.throwDeclaredException(new AsyncCallback<>() {
+        @Override
+        public void onFailure(Throwable ex) {
+            alertOnException(ex);
+        }
 
-      @Override
-      public void onSuccess(Void aVoid) {
-        alerter.alert("This shouldn't happen");
-      }
+        @Override
+        public void onSuccess(Void aVoid) {
+            alerter.alert("This shouldn't happen");
+        }
     });
   }
 
   private void showPhoneBill() {
     logger.info("Calling getPhoneBill");
-    phoneBillService.getPhoneBill(new AsyncCallback<PhoneBill>() {
+    phoneBillService.getPhoneBill(new AsyncCallback<>() {
 
-      @Override
-      public void onFailure(Throwable ex) {
-        alertOnException(ex);
-      }
-
-      @Override
-      public void onSuccess(PhoneBill phoneBill) {
-        StringBuilder sb = new StringBuilder(phoneBill.toString());
-        Collection<PhoneCall> calls = phoneBill.getPhoneCalls();
-        for (PhoneCall call : calls) {
-          sb.append(call);
-          sb.append("\n");
+        @Override
+        public void onFailure(Throwable ex) {
+            alertOnException(ex);
         }
-        alerter.alert(sb.toString());
-      }
+
+        @Override
+        public void onSuccess(PhoneBill phoneBill) {
+            StringBuilder sb = new StringBuilder(phoneBill.toString());
+            Collection<PhoneCall> calls = phoneBill.getPhoneCalls();
+            for (PhoneCall call : calls) {
+                sb.append(call);
+                sb.append("\n");
+            }
+            alerter.alert(sb.toString());
+        }
     });
   }
   
@@ -184,30 +156,30 @@ public class PhoneBillGwt implements EntryPoint {
 
     // The UncaughtExceptionHandler won't catch exceptions during module load
     // So, you have to set up the UI after module load...
-    Scheduler.get().scheduleDeferred(new Scheduler.ScheduledCommand() {
-      @Override
-      public void execute() {
-        setupUI();
-      }
-    });
+    Scheduler.get().scheduleDeferred(this::setupUI);
   }
 
 
   private void setupUI() {
     RootPanel rootPanel = RootPanel.get();
     VerticalPanel panel = new VerticalPanel();
+    MenuBar menu = new MenuBar();
+    rootPanel.add(menu);
     rootPanel.add(panel);
 
     addWidgets(panel);
+    addMenuOptions(menu);
+  }
+
+  private void addMenuOptions(MenuBar menu) {
+    DialogBox readme = new ReadmePopup();
+    MenuBar help = new MenuBar();
+      help.addItem(new MenuItem("README", readme::show));
+    menu.addItem("help", help);
   }
 
   private void setUpUncaughtExceptionHandler() {
-    GWT.setUncaughtExceptionHandler(new GWT.UncaughtExceptionHandler() {
-      @Override
-      public void onUncaughtException(Throwable throwable) {
-        alertOnException(throwable);
-      }
-    });
+    GWT.setUncaughtExceptionHandler(this::alertOnException);
   }
 
   @VisibleForTesting
@@ -215,4 +187,14 @@ public class PhoneBillGwt implements EntryPoint {
     void alert(String message);
   }
 
+  private static class ReadmePopup extends DialogBox {
+    public ReadmePopup() {
+      setText("README");
+      setAnimationEnabled(true);
+      setGlassEnabled(true);
+      Button closeMe = new Button("Close");
+      closeMe.addClickHandler(event -> hide());
+      setWidget(closeMe);
+    }
+  }
 }
