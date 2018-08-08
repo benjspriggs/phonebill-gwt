@@ -100,7 +100,7 @@ public class PhoneBillGwt implements EntryPoint {
 
   private void showUndeclaredException() {
     logger.info("Calling throwUndeclaredException");
-    phoneBillService.throwUndeclaredException(new AsyncCallback<>() {
+    phoneBillService.throwUndeclaredException(new AsyncCallback<Void>() {
         @Override
         public void onFailure(Throwable ex) {
             alertOnException(ex);
@@ -115,7 +115,7 @@ public class PhoneBillGwt implements EntryPoint {
 
   private void showDeclaredException() {
     logger.info("Calling throwDeclaredException");
-    phoneBillService.throwDeclaredException(new AsyncCallback<>() {
+    phoneBillService.throwDeclaredException(new AsyncCallback<Void>() {
         @Override
         public void onFailure(Throwable ex) {
             alertOnException(ex);
@@ -130,7 +130,7 @@ public class PhoneBillGwt implements EntryPoint {
 
   private void showPhoneBill() {
     logger.info("Calling getPhoneBill");
-    phoneBillService.getPhoneBill(new AsyncCallback<>() {
+    phoneBillService.getPhoneBill(new AsyncCallback<PhoneBill>() {
 
         @Override
         public void onFailure(Throwable ex) {
