@@ -4,7 +4,6 @@ import com.google.common.annotations.VisibleForTesting;
 import com.google.gwt.core.client.EntryPoint;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
-import com.google.gwt.event.dom.client.ClickEvent;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -172,10 +171,7 @@ public class PhoneBillGwt implements EntryPoint {
     }
 
     private void addMenuOptions(MenuBar menu) {
-        DialogBox readme = new ReadmePopup();
-        MenuBar help = new MenuBar();
-        help.addItem(new MenuItem("README", readme::show));
-        menu.addItem("help", help);
+        menu.addItem("Help", new HelpMenu());
     }
 
     private void setUpUncaughtExceptionHandler() {
@@ -192,9 +188,28 @@ public class PhoneBillGwt implements EntryPoint {
             setText("README");
             setAnimationEnabled(true);
             setGlassEnabled(true);
+
+            VerticalPanel p = new VerticalPanel();
             Button closeMe = new Button("Close");
             closeMe.addClickHandler(event -> hide());
-            setWidget(closeMe);
+
+            Label l = new Label(getReadme());
+
+            p.add(l);
+            p.add(closeMe);
+            setWidget(p);
+        }
+
+        private String getReadme() {
+            return "Hello world!"; // TODO: add readme
+        }
+    }
+
+    private static class HelpMenu extends MenuBar {
+        public HelpMenu() {
+            ReadmePopup readme = new ReadmePopup();
+            readme.setPopupPosition(Window.getClientWidth() / 2, Window.getClientHeight() / 2);
+            addItem(new MenuItem("README", readme::show));
         }
     }
 }
