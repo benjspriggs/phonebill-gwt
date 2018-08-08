@@ -3,6 +3,7 @@ package edu.pdx.cs410J.bspriggs.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
+import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
 import java.util.Collections;
@@ -11,6 +12,8 @@ import java.util.Map;
 
 public class PhoneBillForm extends FormPanel {
     private static final Map<String, String> FIELDS = init();
+    private HashMap<String, HasValue<String>> values = new HashMap<>();
+    private final PhoneBillServiceAsync phoneBillService;
 
     private static Map<String, String> init(){
         HashMap<String, String> map = new HashMap<>();
@@ -19,6 +22,8 @@ public class PhoneBillForm extends FormPanel {
     }
 
     PhoneBillForm() {
+        this.phoneBillService = GWT.create(PhoneBillService.class);
+
         setAction(GWT.getModuleBaseURL() + "bill");
         setEncoding(FormPanel.ENCODING_MULTIPART);
         setMethod(FormPanel.METHOD_POST);
@@ -29,10 +34,17 @@ public class PhoneBillForm extends FormPanel {
 
         addSubmitHandler(event -> {
             // TODO: validation here
-        });
+            phoneBillService.createPhoneBill(values.get("customer").getValue(), new AsyncCallback<Void>() {
+                @Override
+                public void onFailure(Throwable throwable) {
+                    Window.alert(throwable.getLocalizedMessage());
+                }
 
-        addSubmitCompleteHandler(event -> {
-           Window.alert(event.getResults());
+                @Override
+                public void onSuccess(Void aVoid) {
+                    Window.alert("I DID IT");
+                }
+            });
         });
     }
 
@@ -54,6 +66,8 @@ public class PhoneBillForm extends FormPanel {
             hp.add(tb);
 
             p.add(hp);
+
+            values.put(name, tb);
         }
 
         p.add(new Button("Submit", (ClickHandler) event -> this.submit()));

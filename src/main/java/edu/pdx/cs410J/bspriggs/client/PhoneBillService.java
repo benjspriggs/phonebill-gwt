@@ -3,6 +3,9 @@ package edu.pdx.cs410J.bspriggs.client;
 import com.google.gwt.user.client.rpc.RemoteService;
 import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 
+import java.util.Date;
+import java.util.List;
+
 /**
  * A GWT remote service that returns a dummy Phone Bill
  */
@@ -10,9 +13,31 @@ import com.google.gwt.user.client.rpc.RemoteServiceRelativePath;
 public interface PhoneBillService extends RemoteService {
 
   /**
-   * Returns the a dummy Phone Bill
+   * Returns a phone bill by name.
    */
-  public PhoneBill getPhoneBill();
+  public PhoneBill getPhoneBill(String customer);
+
+  /**
+   * Creates a {@link PhoneBill} for a given customer.
+   * @param customer
+   */
+  public void createPhoneBill(String customer);
+
+  /**
+   * Adds a phone call to a bill.
+   * @param customer
+   * @param call
+   */
+  public void addPhoneCallToBill(String customer, PhoneCall call);
+
+  /**
+   * Searches for calls within a date range.
+   * @param customer
+   * @param start
+   * @param end
+   * @return
+   */
+  public List<PhoneCall> searchForCalls(String customer, Date start, Date end);
 
   /**
    * Always throws an undeclared exception so that we can see GWT handles it.

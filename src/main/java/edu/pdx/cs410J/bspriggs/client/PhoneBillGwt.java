@@ -130,7 +130,7 @@ public class PhoneBillGwt implements EntryPoint {
 
     private void showPhoneBill() {
         logger.info("Calling getPhoneBill");
-        phoneBillService.getPhoneBill(new AsyncCallback<PhoneBill>() {
+        phoneBillService.getPhoneBill("CS410J", new AsyncCallback<PhoneBill>() {
 
             @Override
             public void onFailure(Throwable ex) {

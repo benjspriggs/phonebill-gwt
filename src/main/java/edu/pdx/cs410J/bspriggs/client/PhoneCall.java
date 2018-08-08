@@ -1,48 +1,74 @@
 package edu.pdx.cs410J.bspriggs.client;
 
+import com.google.gwt.i18n.shared.DateTimeFormat;
 import edu.pdx.cs410J.AbstractPhoneCall;
+import edu.pdx.cs410J.ParserException;
 
-import java.lang.Override;
 import java.util.Date;
 
 public class PhoneCall extends AbstractPhoneCall {
+    private final String caller;
+    private final String callee;
+    private final Date startTime;
+    private final Date endTime;
+    private static final String phoneNumberPattern = "\\d{3}-\\d{3}-\\d{4}";
+    private static final String dateFormat = "mm/dd/yyyy hh:mm";
 
-  /**
-   * In order for GWT to serialize this class (so that it can be sent between
-   * the client and the server), it must have a zero-argument constructor.
-   */
-  public PhoneCall() {
+    public PhoneCall() throws ParserException {
+       this("","","","");
+    }
 
-  }
+    public PhoneCall(String caller, String callee, String startDateAndTime, String endDateAndTime) throws ParserException {
+        this.caller = validatePhoneNumber(caller);
+        this.callee = validatePhoneNumber(callee);
 
-  @Override
-  public String getCaller() {
-    return "123-345-6789";
-  }
+        this.startTime = DateTimeFormat.getFormat(dateFormat).parse(startDateAndTime);
+        this.endTime = DateTimeFormat.getFormat(dateFormat).parse(endDateAndTime);
 
-  @Override
-  public Date getStartTime() {
-    return new Date();
-  }
+        if (startTime.compareTo(endTime) > 0) {
+            throw new ParserException("Start time for the call was after end time.");
+        }
+    }
 
-  @Override
-  public String getStartTimeString() {
-    return "START " + getStartTime();
-  }
+    public static String formatDate(Date start) {
+        return DateTimeFormat.getFormat(dateFormat).format(start);
+    }
 
-  @Override
-  public String getCallee() {
-    return "345-677-2341";
-  }
+  private String validatePhoneNumber(String in) throws ParserException {
+        if (!in.matches(phoneNumberPattern)) {
+            throw new ParserException("Invalid phone number " + in);
+        }
 
-  @Override
-  public Date getEndTime() {
-    return new Date();
-  }
+        return in;
+    }
 
-  @Override
-  public String getEndTimeString() {
-    return "END " + getEndTime();
-  }
+    @Override
+    public String getCaller() {
+        return this.caller;
+    }
 
+    @Override
+    public String getCallee() {
+        return this.callee;
+    }
+
+    @Override
+    public Date getStartTime() {
+        return startTime;
+    }
+
+    @Override
+    public String getStartTimeString() {
+        return formatDate(startTime);
+    }
+
+    @Override
+    public Date getEndTime() {
+        return endTime;
+    }
+
+    @Override
+    public String getEndTimeString() {
+        return formatDate(endTime);
+    }
 }

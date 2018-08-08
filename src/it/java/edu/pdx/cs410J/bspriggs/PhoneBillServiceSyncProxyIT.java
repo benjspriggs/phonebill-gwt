@@ -25,10 +25,11 @@ public class PhoneBillServiceSyncProxyIT extends HttpRequestHelper {
   public void canInvokePhoneBillServiceWithGwtSyncProxy() {
     String moduleName = "phonebill";
     SyncProxy.setBaseURL(this.webAppUrl + "/" + moduleName + "/");
+    final String customer = "CS410J";
 
     PhoneBillService service = SyncProxy.createSync(PhoneBillService.class);
-    PhoneBill bill = service.getPhoneBill();
-    assertEquals("CS410J", bill.getCustomer());
+    PhoneBill bill = service.getPhoneBill(customer);
+    assertEquals(customer, bill.getCustomer());
     assertEquals(1, bill.getPhoneCalls().size());
   }
 

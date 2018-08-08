@@ -2,11 +2,11 @@ package edu.pdx.cs410J.bspriggs.client;
 
 import edu.pdx.cs410J.AbstractPhoneBill;
 
-import java.lang.Override;
 import java.util.ArrayList;
 import java.util.Collection;
 
 public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
+  private final String customer;
   private Collection<PhoneCall> calls = new ArrayList<>();
 
   /**
@@ -14,12 +14,16 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
    * the client and the server), it must have a zero-argument constructor.
    */
   public PhoneBill() {
+    this("");
+  }
 
+  public PhoneBill(String customer) {
+    this.customer = customer;
   }
 
   @Override
   public String getCustomer() {
-    return "CS410J";
+    return customer;
   }
 
   @Override
