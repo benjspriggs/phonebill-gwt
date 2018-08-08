@@ -15,10 +15,11 @@ import java.util.Random;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
+import static com.ibm.icu.impl.Assert.fail;
 import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 
-public class PhoneBillServiceImplTest extends GWTTestCase {
+public class PhoneBillServiceImplTest {
 
   @Test
   public void testReturnsExpectedPhoneBill() {
@@ -31,11 +32,6 @@ public class PhoneBillServiceImplTest extends GWTTestCase {
   private Date startDate;
   private Date endDate;
   private List<AbstractPhoneCall> callsInSearchRange;
-
-  @Override
-  public String getModuleName() {
-    return "edu.pdx.cs410J.bspriggs.PhoneBillGwt";
-  }
 
   @Before
   public void setUpStuff() {

@@ -1,6 +1,7 @@
 package edu.pdx.cs410J.bspriggs.client;
 
 import com.google.gwt.i18n.shared.DateTimeFormat;
+import com.google.gwt.i18n.shared.DefaultDateTimeFormatInfo;
 import edu.pdx.cs410J.AbstractPhoneCall;
 import edu.pdx.cs410J.ParserException;
 
@@ -22,16 +23,20 @@ public class PhoneCall extends AbstractPhoneCall {
         this.caller = validatePhoneNumber(caller);
         this.callee = validatePhoneNumber(callee);
 
-        this.startTime = DateTimeFormat.getFormat(dateFormat).parse(startDateAndTime);
-        this.endTime = DateTimeFormat.getFormat(dateFormat).parse(endDateAndTime);
+        this.startTime = parseDate(startDateAndTime);
+        this.endTime = parseDate(endDateAndTime);
 
         if (startTime.compareTo(endTime) > 0) {
             throw new ParserException("Start time for the call was after end time.");
         }
     }
 
+    private Date parseDate(String startDateAndTime) {
+        return new DateTimeFormat(dateFormat, new DefaultDateTimeFormatInfo()){}.parse(startDateAndTime);
+    }
+
     public static String formatDate(Date start) {
-        return DateTimeFormat.getFormat(dateFormat).format(start);
+        return new DateTimeFormat(dateFormat, new DefaultDateTimeFormatInfo()){}.format(start);
     }
 
   private String validatePhoneNumber(String in) throws ParserException {
