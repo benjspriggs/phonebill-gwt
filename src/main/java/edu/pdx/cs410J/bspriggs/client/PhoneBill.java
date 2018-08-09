@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
-  private final String customer;
+  private String customer;
   private Collection<PhoneCall> calls = new ArrayList<>();
 
   /**

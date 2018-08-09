@@ -91,6 +91,7 @@ public class PhoneBillGwt implements EntryPoint {
         panel.add(showDeclaredExceptionButton);
         panel.add(showClientSideExceptionButton);
         panel.add(new PhoneBillForm());
+        panel.add(new PhoneBillView());
     }
 
     private void throwClientSideException() {

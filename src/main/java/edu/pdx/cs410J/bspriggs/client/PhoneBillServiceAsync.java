@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 /**
  * The client-side interface to the phone bill service
@@ -50,4 +51,10 @@ public interface PhoneBillServiceAsync {
    * @return
    */
   void searchForCalls(String customer, Date start, Date end, AsyncCallback<List<PhoneCall>> async);
+
+    /***
+     * Gets all the available phone bills on the server.
+     * @return
+     */
+    void getAvailablePhonebills(AsyncCallback<List<String>> async);
 }

@@ -73,8 +73,8 @@ public class PhoneBillServiceImplTest {
     var start = generateDate();
     var end = generateDateAfter(start);
     return new PhoneCall(generatePhoneNumber(), generatePhoneNumber(),
-            PhoneCall.formatDate(start),
-            PhoneCall.formatDate(end));
+            start,
+            end);
   }
 
   static Date generateDateAfter(Date date) {
