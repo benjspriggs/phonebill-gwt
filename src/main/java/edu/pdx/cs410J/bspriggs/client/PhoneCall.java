@@ -1,45 +1,41 @@
 package edu.pdx.cs410J.bspriggs.client;
 
-import com.em.validation.client.constraints.NotEmpty;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DefaultDateTimeFormatInfo;
 import edu.pdx.cs410J.AbstractPhoneCall;
 import edu.pdx.cs410J.ParserException;
 
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 public class PhoneCall extends AbstractPhoneCall {
-    @NotEmpty
+    @NotNull
     @Pattern(regexp=phoneNumberPattern)
     private final String caller;
 
-    @NotEmpty
+    @NotNull
     @Pattern(regexp=phoneNumberPattern)
     private final String callee;
 
-    @NotEmpty
-    private final String startTime;
-
-    @NotEmpty
-    private final String endTime;
+    private final Date startDate;
+    private final Date endDate;
 
     private static final String phoneNumberPattern = "\\d{3}-\\d{3}-\\d{4}";
     private static final String dateFormat = "mm/dd/yyyy hh:mm";
 
-    public PhoneCall() throws ParserException {
-       this("","","","");
+    public PhoneCall() {
+       this("","",null, null);
     }
 
-    public PhoneCall(String caller, String callee, String startDateAndTime, String endDateAndTime) {
+    public PhoneCall(String caller, String callee, Date startDate, Date endDate) {
         this.caller = caller;
         this.callee = callee;
-        this.startTime = startDateAndTime;
-        this.endTime = endDateAndTime;
-
+        this.startDate = startDate;
+        this.endDate = endDate;
     }
 
-    private Date parseDate(String startDateAndTime) {
+    private static Date parseDate(String startDateAndTime) {
         return new DateTimeFormat(dateFormat, new DefaultDateTimeFormatInfo()){}.parse(startDateAndTime);
     }
 
@@ -59,21 +55,21 @@ public class PhoneCall extends AbstractPhoneCall {
 
     @Override
     public Date getStartTime() {
-        return parseDate(startTime);
+        return startDate;
     }
 
     @Override
     public String getStartTimeString() {
-        return startTime;
+        return formatDate(startDate);
     }
 
     @Override
     public Date getEndTime() {
-        return parseDate(endTime);
+        return endDate;
     }
 
     @Override
     public String getEndTimeString() {
-        return endTime;
+        return formatDate(endDate);
     }
 }
