@@ -30,6 +30,8 @@ public class PhoneBillView extends VerticalPanel {
             refreshAvailablePhoneBills(l);
         });
 
+        refreshAvailablePhoneBills(l);
+
         Timer t = new Timer() {
             @Override
             public void run() {
@@ -37,8 +39,6 @@ public class PhoneBillView extends VerticalPanel {
             }
         };
         t.scheduleRepeating(100);
-
-        refreshAvailablePhoneBills(l);
 
         add(l);
         add(list);
@@ -63,7 +63,7 @@ public class PhoneBillView extends VerticalPanel {
 
                 bills = strings;
                 l.clear();
-                bills.stream().forEach(l::addItem);
+                bills.forEach(l::addItem);
             }
         });
 
@@ -92,7 +92,8 @@ public class PhoneBillView extends VerticalPanel {
         private Label customerLabel = new Label("NO CUSTOMER SELECTED");
         private Grid callGrid = new Grid();
         private DialogBox newCallDialog = new DialogBox();
-        private PhoneCallForm newCallForm;
+        private VerticalPanel dialogPanel = new VerticalPanel();
+        private PhoneBill bill;
 
         PhoneBillList() {
             add(customerLabel);
@@ -100,7 +101,10 @@ public class PhoneBillView extends VerticalPanel {
 
             Button addCallButton = new Button("Add new Phone Call");
 
-            addFormAndButtons();
+            newCallDialog.add(dialogPanel);
+            newCallDialog.setGlassEnabled(true);
+            newCallDialog.setAnimationEnabled(true);
+            addFormAndButtons(null);
 
             addCallButton.addClickHandler(event -> {
                 newCallDialog.show();
@@ -109,21 +113,26 @@ public class PhoneBillView extends VerticalPanel {
             add(addCallButton);
         }
 
-        private void addFormAndButtons() {
-            newCallDialog.add(newCallForm);
+        private void addFormAndButtons(String customer) {
+            dialogPanel.clear();
+            dialogPanel.add(new PhoneCallForm(customer));
 
-            Button closeButton = new Button();
+            Button closeButton = new Button("Close");
             closeButton.addClickHandler(event -> {
                 newCallDialog.hide(true);
             });
+            dialogPanel.add(closeButton);
         }
 
         void update(PhoneBill bill) {
-            if (bill == null) {
+            if (bill.equals(this.bill)) {
                 return;
             }
 
-            newCallForm = new PhoneCallForm(bill.getCustomer());
+            this.bill = bill;
+
+            addFormAndButtons(bill.getCustomer());
+
             customerLabel.setText("Customer: " + bill.getCustomer());
 
             callGrid.resize(bill.getPhoneCalls().size() + 1, 4);
