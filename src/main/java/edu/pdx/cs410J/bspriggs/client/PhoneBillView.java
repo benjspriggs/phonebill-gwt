@@ -91,6 +91,8 @@ public class PhoneBillView extends VerticalPanel {
     private class PhoneBillList extends VerticalPanel {
         private Label customerLabel = new Label("NO CUSTOMER SELECTED");
         private Grid callGrid = new Grid();
+        private DialogBox newCallDialog = new DialogBox();
+        private PhoneCallForm newCallForm;
 
         PhoneBillList() {
             add(customerLabel);
@@ -98,7 +100,22 @@ public class PhoneBillView extends VerticalPanel {
 
             Button addCallButton = new Button("Add new Phone Call");
 
+            addFormAndButtons();
+
+            addCallButton.addClickHandler(event -> {
+                newCallDialog.show();
+            });
+
             add(addCallButton);
+        }
+
+        private void addFormAndButtons() {
+            newCallDialog.add(newCallForm);
+
+            Button closeButton = new Button();
+            closeButton.addClickHandler(event -> {
+                newCallDialog.hide(true);
+            });
         }
 
         void update(PhoneBill bill) {
@@ -106,6 +123,7 @@ public class PhoneBillView extends VerticalPanel {
                 return;
             }
 
+            newCallForm = new PhoneCallForm(bill.getCustomer());
             customerLabel.setText("Customer: " + bill.getCustomer());
 
             callGrid.resize(bill.getPhoneCalls().size() + 1, 4);

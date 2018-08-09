@@ -18,7 +18,6 @@ public class PhoneCallForm extends FormPanel {
 
     private static Map<String, String> init(){
         HashMap<String, String> map = new HashMap<>();
-        map.put("customer", "Customer");
         map.put("caller", "Caller");
         map.put("callee", "Callee");
         map.put("startTime", "Start Time");
@@ -26,7 +25,7 @@ public class PhoneCallForm extends FormPanel {
         return Collections.unmodifiableMap(map);
     }
 
-    PhoneCallForm() {
+    PhoneCallForm(String customer) {
         this.phoneBillService = GWT.create(PhoneBillService.class);
 
         setAction(GWT.getModuleBaseURL() + "call");
@@ -44,7 +43,7 @@ public class PhoneCallForm extends FormPanel {
             Date startTime = PhoneCall.parseDate(values.get("startTime").getValue());
             Date endTime = PhoneCall.parseDate(values.get("endTime").getValue());
             PhoneCall call = new PhoneCall(caller, callee, startTime, endTime);
-            phoneBillService.addPhoneCallToBill(values.get("customer").getValue(), call, new AsyncCallback<Void>() {
+            phoneBillService.addPhoneCallToBill(customer, call, new AsyncCallback<Void>() {
                 @Override
                 public void onFailure(Throwable throwable) {
                     Window.alert("dong");
