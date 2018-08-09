@@ -35,7 +35,7 @@ public class PhoneCall extends AbstractPhoneCall {
     }
 
     public static Date parseDate(String startDateAndTime) {
-        return new DateTimeFormat(dateFormat, new DefaultDateTimeFormatInfo()){}.parse(startDateAndTime);
+        return new DateTimeFormat(dateFormat, new DefaultDateTimeFormatInfo()){}.parseStrict(startDateAndTime);
     }
 
     public static String formatDate(Date start) {
