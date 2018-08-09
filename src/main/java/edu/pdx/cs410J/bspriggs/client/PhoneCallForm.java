@@ -2,7 +2,6 @@ package edu.pdx.cs410J.bspriggs.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.event.dom.client.ClickHandler;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
@@ -46,12 +45,10 @@ public class PhoneCallForm extends FormPanel {
             phoneBillService.addPhoneCallToBill(customer, call, new AsyncCallback<Void>() {
                 @Override
                 public void onFailure(Throwable throwable) {
-                    Window.alert("dong");
                 }
 
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Window.alert("ding");
                 }
             });
         });
