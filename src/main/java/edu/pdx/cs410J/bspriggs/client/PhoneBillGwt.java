@@ -86,11 +86,12 @@ public class PhoneBillGwt implements EntryPoint {
         showClientSideExceptionButton= new Button("Show client-side exception");
         showClientSideExceptionButton.addClickHandler(clickEvent -> throwClientSideException());
 
+        /*
         panel.add(showPhoneBillButton);
         panel.add(showUndeclaredExceptionButton);
         panel.add(showDeclaredExceptionButton);
         panel.add(showClientSideExceptionButton);
-        panel.add(new PhoneBillForm());
+        */
         panel.add(new PhoneBillView());
     }
 
@@ -173,7 +174,8 @@ public class PhoneBillGwt implements EntryPoint {
     }
 
     private void addMenuOptions(MenuBar menu) {
-        menu.addItem("Help", new HelpMenu());
+        menu.addItem("New", new CreateMenuItem());
+        menu.addItem("Help", new HelpMenuItem());
     }
 
     private void setUpUncaughtExceptionHandler() {
@@ -186,7 +188,7 @@ public class PhoneBillGwt implements EntryPoint {
     }
 
     private static class ReadmePopup extends DialogBox {
-        public ReadmePopup() {
+        ReadmePopup() {
             setText("README");
             setAnimationEnabled(true);
             setGlassEnabled(true);
@@ -207,11 +209,42 @@ public class PhoneBillGwt implements EntryPoint {
         }
     }
 
-    private static class HelpMenu extends MenuBar {
-        public HelpMenu() {
+    private static class PhoneBillPopup extends DialogBox {
+        PhoneBillPopup() {
+            setText("New Phone Bill");
+            setAnimationEnabled(true);
+            setGlassEnabled(true);
+
+            VerticalPanel p = new VerticalPanel();
+            Button closeMe = new Button("Close");
+            closeMe.addClickHandler(event -> hide());
+            PhoneBillForm form = new PhoneBillForm();
+            form.addSubmitHandler(event -> hide());
+
+            p.add(new PhoneBillForm());
+            p.add(closeMe);
+            setWidget(p);
+        }
+    }
+
+    private static class HelpMenuItem extends MenuBar {
+        HelpMenuItem() {
             ReadmePopup readme = new ReadmePopup();
             readme.setPopupPosition(Window.getClientWidth() / 2, Window.getClientHeight() / 2);
             addItem(new MenuItem("README", readme::show));
+        }
+    }
+
+    private class CreateMenuItem extends MenuBar {
+        CreateMenuItem() {
+            PhoneBillPopup p = new PhoneBillPopup();
+            p.setPopupPosition(Window.getClientWidth() / 2, Window.getClientHeight() / 2);
+            addItem(new MenuItem("Phone bill", new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    p.show();
+                }
+            }));
         }
     }
 }

@@ -48,9 +48,6 @@ public class PhoneBillForm extends FormPanel {
     }
 
     private void addWidgets(Panel p) {
-        Label l = new Label("Create a new Phone bill");
-        p.add(l);
-
         for (Map.Entry<String, String> pair: FIELDS.entrySet()) {
             String name = pair.getKey();
             String displayName = pair.getValue();

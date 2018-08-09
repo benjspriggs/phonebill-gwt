@@ -96,21 +96,20 @@ public class PhoneBillView extends VerticalPanel {
         private PhoneBill bill;
 
         PhoneBillList() {
-            add(customerLabel);
-            add(callGrid);
-
             Button addCallButton = new Button("Add new Phone Call");
-
-            newCallDialog.add(dialogPanel);
-            newCallDialog.setGlassEnabled(true);
-            newCallDialog.setAnimationEnabled(true);
-            addFormAndButtons(null);
 
             addCallButton.addClickHandler(event -> {
                 newCallDialog.show();
             });
 
             add(addCallButton);
+            add(customerLabel);
+            add(callGrid);
+
+            newCallDialog.add(dialogPanel);
+            newCallDialog.setGlassEnabled(true);
+            newCallDialog.setAnimationEnabled(true);
+            addFormAndButtons(null);
         }
 
         private void addFormAndButtons(String customer) {
