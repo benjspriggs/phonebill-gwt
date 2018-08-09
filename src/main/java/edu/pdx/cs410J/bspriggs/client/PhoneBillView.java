@@ -2,6 +2,7 @@ package edu.pdx.cs410J.bspriggs.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
+import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
@@ -83,7 +84,7 @@ public class PhoneBillView extends VerticalPanel {
 
             @Override
             public void onSuccess(PhoneBill phoneBill) {
-                list.update(phoneBill);
+                list.updateIfChanged(phoneBill);
             }
         });
     }
@@ -124,11 +125,18 @@ public class PhoneBillView extends VerticalPanel {
             dialogPanel.add(closeButton);
         }
 
-        void update(PhoneBill bill) {
-            if (bill.equals(this.bill)) {
+        void updateIfChanged(PhoneBill bill) {
+            if (bill == null)
+                return;
+            if (this.bill != null && this.bill.equals(bill)) {
                 return;
             }
+            Window.alert("UPDATING, new" + bill + " " + this.bill);
 
+            update(bill);
+        }
+
+        void update(PhoneBill bill) {
             this.bill = bill;
 
             addFormAndButtons(bill.getCustomer());

@@ -71,4 +71,22 @@ public class PhoneCall extends AbstractPhoneCall {
     public String getEndTimeString() {
         return formatDate(endDate);
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == this) {
+            return true;
+        }
+
+        if (!(o instanceof PhoneCall)) {
+            return false;
+        }
+
+        PhoneCall comparing = (PhoneCall) o;
+
+        return comparing.getCaller().contentEquals(getCaller())
+        && comparing.getCallee().contentEquals(getCallee())
+        && comparing.getStartTimeString().contentEquals(getStartTimeString())
+        && comparing.getEndTimeString().contentEquals(getEndTimeString());
+    }
 }
