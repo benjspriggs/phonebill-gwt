@@ -3,7 +3,10 @@ package edu.pdx.cs410J.bspriggs.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Grid;
+import com.google.gwt.user.client.ui.Label;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,6 +25,9 @@ public class PhoneBillView extends VerticalPanel {
         add(new Label("Available Phone Bills"));
 
         ListBox l = new ListBox();
+        l.addChangeHandler(change -> {
+            refreshAvailablePhoneBills(l);
+        });
 
         Timer t = new Timer() {
             @Override
@@ -53,10 +59,10 @@ public class PhoneBillView extends VerticalPanel {
                 bills = strings;
                 l.clear();
                 bills.stream().forEach(l::addItem);
-
-                updateSelectedPhoneBill(l);
             }
         });
+
+        updateSelectedPhoneBill(l);
     }
 
     private void updateSelectedPhoneBill(ListBox l) {
@@ -84,6 +90,10 @@ public class PhoneBillView extends VerticalPanel {
         }
 
         void update(PhoneBill bill) {
+            if (bill == null) {
+                return;
+            }
+
             customerLabel.setText("Customer: " + bill.getCustomer());
 
             callGrid.resize(bill.getPhoneCalls().size(), 4);
