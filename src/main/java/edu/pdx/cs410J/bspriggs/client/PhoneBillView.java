@@ -16,7 +16,14 @@ import java.util.stream.IntStream;
 
 public class PhoneBillView extends VerticalPanel {
     private final PhoneBillServiceAsync phoneBillService;
+
+    /**
+     * All of the possible customer names;
+     */
     private List<String> bills = new ArrayList<>();
+    /**
+     * The view of the currently selected {@link PhoneBill}.
+     */
     private PhoneBillList list = new PhoneBillList();
 
     PhoneBillView() {
@@ -43,6 +50,10 @@ public class PhoneBillView extends VerticalPanel {
         add(list);
     }
 
+    /**
+     * Refreshes the available phone bills.
+     * @param l
+     */
     private void refreshAvailablePhoneBills(ListBox l) {
         phoneBillService.getAvailablePhonebills(new AsyncCallback<List<String>>() {
             @Override
@@ -65,8 +76,11 @@ public class PhoneBillView extends VerticalPanel {
         updateSelectedPhoneBill(l);
     }
 
+    /**
+     * Updates the selected phone bill from {@link PhoneBillService} based on what's selected in the ListBox.
+     * @param l
+     */
     private void updateSelectedPhoneBill(ListBox l) {
-        l.getSelectedValue();
         phoneBillService.getPhoneBill(l.getSelectedValue(), new AsyncCallback<PhoneBill>() {
             @Override
             public void onFailure(Throwable throwable) {
