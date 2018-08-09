@@ -2,7 +2,6 @@ package edu.pdx.cs410J.bspriggs.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 
@@ -116,7 +115,11 @@ public class PhoneBillView extends VerticalPanel {
 
         private void addFormAndButtons(String customer) {
             dialogPanel.clear();
-            dialogPanel.add(new PhoneCallForm(customer));
+            PhoneCallForm form = new PhoneCallForm(customer);
+            form.addSubmitHandler(submit -> {
+                newCallDialog.hide(true);
+            });
+            dialogPanel.add(form);
 
             Button closeButton = new Button("Close");
             closeButton.addClickHandler(event -> {
@@ -131,7 +134,6 @@ public class PhoneBillView extends VerticalPanel {
             if (this.bill != null && this.bill.equals(bill)) {
                 return;
             }
-            Window.alert("UPDATING, new" + bill + " " + this.bill);
 
             update(bill);
         }
