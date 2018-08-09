@@ -42,7 +42,6 @@ public class PhoneBillForm extends FormPanel {
 
                 @Override
                 public void onSuccess(Void aVoid) {
-                    Window.alert("I DID IT");
                 }
             });
         });
