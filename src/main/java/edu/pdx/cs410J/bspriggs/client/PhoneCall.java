@@ -12,14 +12,14 @@ import java.util.Date;
 public class PhoneCall extends AbstractPhoneCall {
     @NotNull
     @Pattern(regexp=phoneNumberPattern)
-    private final String caller;
+    private String caller;
 
     @NotNull
     @Pattern(regexp=phoneNumberPattern)
-    private final String callee;
+    private String callee;
 
-    private final Date startDate;
-    private final Date endDate;
+    private Date startDate;
+    private Date endDate;
 
     private static final String phoneNumberPattern = "\\d{3}-\\d{3}-\\d{4}";
     private static final String dateFormat = "mm/dd/yyyy hh:mm";

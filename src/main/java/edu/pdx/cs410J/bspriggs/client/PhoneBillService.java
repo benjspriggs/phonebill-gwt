@@ -39,6 +39,12 @@ public interface PhoneBillService extends RemoteService {
    */
   public List<PhoneCall> searchForCalls(String customer, Date start, Date end);
 
+  /***
+   * Gets all the available phone bills on the server.
+   * @return
+   */
+  public List<String> getAvailablePhonebills();
+
   /**
    * Always throws an undeclared exception so that we can see GWT handles it.
    */

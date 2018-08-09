@@ -44,6 +44,11 @@ public class PhoneBillServiceImpl extends RemoteServiceServlet implements PhoneB
             .collect(Collectors.toList());
   }
 
+  @Override
+  public List<String> getAvailablePhonebills() {
+    return new ArrayList<>(calls.keySet());
+  }
+
 
   @Override
   public void throwUndeclaredException() {
