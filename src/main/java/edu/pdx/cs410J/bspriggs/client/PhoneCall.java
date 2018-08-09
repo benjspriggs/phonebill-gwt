@@ -3,7 +3,6 @@ package edu.pdx.cs410J.bspriggs.client;
 import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DefaultDateTimeFormatInfo;
 import edu.pdx.cs410J.AbstractPhoneCall;
-import edu.pdx.cs410J.ParserException;
 
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Pattern;
@@ -35,7 +34,7 @@ public class PhoneCall extends AbstractPhoneCall {
         this.endDate = endDate;
     }
 
-    private static Date parseDate(String startDateAndTime) {
+    public static Date parseDate(String startDateAndTime) {
         return new DateTimeFormat(dateFormat, new DefaultDateTimeFormatInfo()){}.parse(startDateAndTime);
     }
 
