@@ -21,10 +21,10 @@ public class PhoneCall extends AbstractPhoneCall {
     private Date endDate;
 
     private static final String phoneNumberPattern = "\\d{3}-\\d{3}-\\d{4}";
-    private static final String dateFormat = "mm/dd/yyyy hh:mm";
+    private static final String dateFormat = "mm/dd/yyyy hh:mm a";
 
     public PhoneCall() {
-       this("","",null, null);
+        this("","",null, null);
     }
 
     public PhoneCall(String caller, String callee, Date startDate, Date endDate) {
@@ -85,8 +85,8 @@ public class PhoneCall extends AbstractPhoneCall {
         PhoneCall comparing = (PhoneCall) o;
 
         return comparing.getCaller().contentEquals(getCaller())
-        && comparing.getCallee().contentEquals(getCallee())
-        && comparing.getStartTimeString().contentEquals(getStartTimeString())
-        && comparing.getEndTimeString().contentEquals(getEndTimeString());
+                && comparing.getCallee().contentEquals(getCallee())
+                && comparing.getStartTimeString().contentEquals(getStartTimeString())
+                && comparing.getEndTimeString().contentEquals(getEndTimeString());
     }
 }
