@@ -35,4 +35,21 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
   public Collection<PhoneCall> getPhoneCalls() {
     return this.calls;
   }
+
+  @Override
+  public boolean equals(Object o) {
+    if (o == this) {
+      return true;
+    }
+
+    if (!(o instanceof PhoneBill)) {
+      return false;
+    }
+
+    PhoneBill comparing = (PhoneBill) o;
+
+    return comparing.getCustomer().contentEquals(getCustomer())
+            && getPhoneCalls().containsAll(comparing.getPhoneCalls())
+            && comparing.getPhoneCalls().containsAll(getPhoneCalls());
+  }
 }
