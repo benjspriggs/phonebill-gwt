@@ -3,15 +3,9 @@ package edu.pdx.cs410J.bspriggs.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.Label;
-import com.google.gwt.user.client.ui.ListBox;
-import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 import java.util.stream.IntStream;
 
 public class PhoneBillView extends VerticalPanel {
@@ -101,6 +95,10 @@ public class PhoneBillView extends VerticalPanel {
         PhoneBillList() {
             add(customerLabel);
             add(callGrid);
+
+            Button addCallButton = new Button("Add new Phone Call");
+
+            add(addCallButton);
         }
 
         void update(PhoneBill bill) {
@@ -110,17 +108,29 @@ public class PhoneBillView extends VerticalPanel {
 
             customerLabel.setText("Customer: " + bill.getCustomer());
 
-            callGrid.resize(bill.getPhoneCalls().size(), 4);
-            Collection<PhoneCall> calls = bill.getPhoneCalls();
-            Iterator<PhoneCall> cn = calls.iterator();
+            callGrid.resize(bill.getPhoneCalls().size() + 1, 4);
+            addHeader();
 
-            IntStream.range(0, calls.size()).forEach(i -> {
+            Collection<PhoneCall> calls = bill.getPhoneCalls();
+            Iterator<PhoneCall> cn = calls.stream()
+                    .sorted(Comparator.comparing(PhoneCall::getStartTime))
+                    .iterator();
+
+            IntStream.range(1, calls.size() + 1).forEach(i -> {
                 PhoneCall call = cn.next();
                 callGrid.setText(i, 0, call.getCaller());
-                callGrid.setText(i, 0, call.getCallee());
-                callGrid.setText(i, 0, call.getStartTimeString());
-                callGrid.setText(i, 0, call.getEndTimeString());
+                callGrid.setText(i, 1, call.getCallee());
+                callGrid.setText(i, 2, call.getStartTimeString());
+                callGrid.setText(i, 3, call.getEndTimeString());
             });
         }
+
+        private void addHeader() {
+            callGrid.setText(0, 0, "Caller");
+            callGrid.setText(0, 1, "Callee");
+            callGrid.setText(0, 2, "Start Time");
+            callGrid.setText(0, 3, "End Time");
+        }
     }
+
 }
