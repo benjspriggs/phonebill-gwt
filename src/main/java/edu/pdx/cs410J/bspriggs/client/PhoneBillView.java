@@ -1,5 +1,6 @@
 package edu.pdx.cs410J.bspriggs.client;
 
+import com.github.gwtbootstrap.client.ui.Heading;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
@@ -23,7 +24,7 @@ public class PhoneBillView extends VerticalPanel {
     PhoneBillView() {
         phoneBillService = GWT.create(PhoneBillService.class);
 
-        add(new Label("Available Phone Bills"));
+        add(new Heading(2, "Available Phone Bills"));
 
         ListBox l = new ListBox();
         l.addChangeHandler(change -> {
