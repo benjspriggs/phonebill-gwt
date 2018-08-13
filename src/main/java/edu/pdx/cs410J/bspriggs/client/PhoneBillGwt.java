@@ -205,7 +205,9 @@ public class PhoneBillGwt implements EntryPoint {
         }
 
         private String getReadme() {
-            return "Hello world!"; // TODO: add readme
+            return "This is an application to keep track of phone bills and phone calls on each bill." +
+                    "To create a new phone bill, click on 'New -> Phone Bill'. To add a call to an existing" +
+                    "phone bill, click on the 'Add Phone Call' button and fill out the form. ";
         }
     }
 
@@ -230,7 +232,7 @@ public class PhoneBillGwt implements EntryPoint {
     private static class HelpMenuItem extends MenuBar {
         HelpMenuItem() {
             ReadmePopup readme = new ReadmePopup();
-            readme.setPopupPosition(Window.getClientWidth() / 2, Window.getClientHeight() / 2);
+            // readme.setPopupPosition(Window.getClientWidth() / 2, Window.getClientHeight() / 2);
             addItem(new MenuItem("README", readme::show));
         }
     }
@@ -238,7 +240,7 @@ public class PhoneBillGwt implements EntryPoint {
     private class CreateMenuItem extends MenuBar {
         CreateMenuItem() {
             PhoneBillPopup p = new PhoneBillPopup();
-            p.setPopupPosition(Window.getClientWidth() / 2, Window.getClientHeight() / 2);
+            // p.setPopupPosition(Window.getClientWidth() / 2, Window.getClientHeight() / 2);
             addItem(new MenuItem("Phone bill", new Scheduler.ScheduledCommand() {
                 @Override
                 public void execute() {
