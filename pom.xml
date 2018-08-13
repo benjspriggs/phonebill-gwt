@@ -22,6 +22,12 @@
       <name>CS410J Maven Repository</name>
       <url>https://dl.bintray.com/davidwhitlock/maven</url>
     </repository>
+    <repository> <!-- For GWT-Bootstrap -->
+      <id>sonatype</id>
+      <url>http://oss.sonatype.org/content/repositories/snapshots</url>
+      <snapshots><enabled>true</enabled></snapshots>
+      <releases><enabled>false</enabled></releases>
+    </repository>
   </repositories>
   <dependencies>
     <dependency>
@@ -52,6 +58,12 @@
       <artifactId>gwt-syncproxy</artifactId>
       <version>0.5</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.github.gwtbootstrap</groupId>
+      <artifactId>gwt-bootstrap</artifactId>
+      <version>2.3.2.1-SNAPSHOT</version>
+      <scope>provided</scope>
     </dependency>
   </dependencies>
   <build>
