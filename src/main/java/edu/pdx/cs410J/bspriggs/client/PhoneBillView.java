@@ -1,13 +1,16 @@
 package edu.pdx.cs410J.bspriggs.client;
 
-import com.github.gwtbootstrap.client.ui.Heading;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.Button;
+import com.google.gwt.user.client.ui.DialogBox;
+import com.google.gwt.user.client.ui.ListBox;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import org.gwtbootstrap3.client.ui.PageHeader;
 
-import java.util.*;
-import java.util.stream.IntStream;
+import java.util.ArrayList;
+import java.util.List;
 
 public class PhoneBillView extends VerticalPanel {
     private final PhoneBillServiceAsync phoneBillService;
@@ -21,10 +24,18 @@ public class PhoneBillView extends VerticalPanel {
      */
     private PhoneBillList list = new PhoneBillList();
 
+    /**
+     * Dialog displayed when user clicks to add a new phone call.
+     */
+    private DialogBox newCallDialog = new DialogBox();
+    private VerticalPanel dialogPanel = new VerticalPanel();
+
     PhoneBillView() {
         phoneBillService = GWT.create(PhoneBillService.class);
 
-        add(new Heading(2, "Available Phone Bills"));
+        PageHeader header = new PageHeader();
+        header.setText("Available Phone Bills");
+        add(header);
 
         ListBox l = new ListBox();
         l.addChangeHandler(change -> {
@@ -41,7 +52,17 @@ public class PhoneBillView extends VerticalPanel {
         };
         t.scheduleRepeating(100);
 
+        newCallDialog.add(dialogPanel);
+        newCallDialog.setGlassEnabled(true);
+        newCallDialog.setAnimationEnabled(true);
+        Button addCallButton = new Button("Add new Phone Call");
+
+        addCallButton.addClickHandler(event -> {
+            newCallDialog.show();
+        });
+
         add(l);
+        add(newCallDialog);
         add(list);
     }
 
@@ -84,90 +105,34 @@ public class PhoneBillView extends VerticalPanel {
 
             @Override
             public void onSuccess(PhoneBill phoneBill) {
-                list.updateIfChanged(phoneBill);
+                if (list.updateIfChanged(phoneBill)){
+                    addFormAndButtons(phoneBill);
+                }
             }
         });
     }
 
-    private class PhoneBillList extends VerticalPanel {
-        private Label customerLabel = new Label("NO CUSTOMER SELECTED");
-        private Grid callGrid = new Grid();
-        private DialogBox newCallDialog = new DialogBox();
-        private VerticalPanel dialogPanel = new VerticalPanel();
-        private PhoneBill bill;
+    private void addFormAndButtons(PhoneBill phoneBill) {
+        if (phoneBill == null)
+            return;
 
-        PhoneBillList() {
-            Button addCallButton = new Button("Add new Phone Call");
+        String customer = phoneBill.getCustomer();
 
-            addCallButton.addClickHandler(event -> {
-                newCallDialog.show();
-            });
+        dialogPanel.clear();
 
-            add(addCallButton);
-            add(customerLabel);
-            add(callGrid);
+        PhoneCallForm form = new PhoneCallForm(customer);
 
-            newCallDialog.add(dialogPanel);
-            newCallDialog.setGlassEnabled(true);
-            newCallDialog.setAnimationEnabled(true);
-            addFormAndButtons(null);
-        }
+        form.addSubmitHandler(submit -> {
+            newCallDialog.hide(true);
+        });
+        dialogPanel.add(form);
 
-        private void addFormAndButtons(String customer) {
-            dialogPanel.clear();
-            PhoneCallForm form = new PhoneCallForm(customer);
-            form.addSubmitHandler(submit -> {
-                newCallDialog.hide(true);
-            });
-            dialogPanel.add(form);
-
-            Button closeButton = new Button("Close");
-            closeButton.addClickHandler(event -> {
-                newCallDialog.hide(true);
-            });
-            dialogPanel.add(closeButton);
-        }
-
-        void updateIfChanged(PhoneBill bill) {
-            if (bill == null)
-                return;
-            if (this.bill != null && this.bill.equals(bill)) {
-                return;
-            }
-
-            update(bill);
-        }
-
-        void update(PhoneBill bill) {
-            this.bill = bill;
-
-            addFormAndButtons(bill.getCustomer());
-
-            customerLabel.setText("Customer: " + bill.getCustomer());
-
-            callGrid.resize(bill.getPhoneCalls().size() + 1, 4);
-            addHeader();
-
-            Collection<PhoneCall> calls = bill.getPhoneCalls();
-            Iterator<PhoneCall> cn = calls.stream()
-                    .sorted(Comparator.comparing(PhoneCall::getStartTime))
-                    .iterator();
-
-            IntStream.range(1, calls.size() + 1).forEach(i -> {
-                PhoneCall call = cn.next();
-                callGrid.setText(i, 0, call.getCaller());
-                callGrid.setText(i, 1, call.getCallee());
-                callGrid.setText(i, 2, call.getStartTimeString());
-                callGrid.setText(i, 3, call.getEndTimeString());
-            });
-        }
-
-        private void addHeader() {
-            callGrid.setText(0, 0, "Caller");
-            callGrid.setText(0, 1, "Callee");
-            callGrid.setText(0, 2, "Start Time");
-            callGrid.setText(0, 3, "End Time");
-        }
+        Button closeButton = new Button("Close");
+        closeButton.addClickHandler(event -> {
+            newCallDialog.hide(true);
+        });
+        dialogPanel.add(closeButton);
     }
+
 
 }

@@ -34,6 +34,8 @@ public class PhoneBillGwt implements EntryPoint {
     @VisibleForTesting
     Button showClientSideExceptionButton;
 
+    private DeckPanel deckPanel = new DeckPanel();
+
     public PhoneBillGwt() {
         this(Window::alert);
     }
@@ -73,7 +75,7 @@ public class PhoneBillGwt implements EntryPoint {
         return throwable;
     }
 
-    private void addWidgets(VerticalPanel panel) {
+    private void addMainPanelWidgets(VerticalPanel panel) {
         showPhoneBillButton = new Button("Show Phone Bill");
         showPhoneBillButton.addClickHandler(clickEvent -> showPhoneBill());
 
@@ -164,17 +166,34 @@ public class PhoneBillGwt implements EntryPoint {
 
     private void setupUI() {
         RootPanel rootPanel = RootPanel.get();
-        VerticalPanel panel = new VerticalPanel();
         MenuBar menu = new MenuBar();
-        rootPanel.add(menu);
-        rootPanel.add(panel);
+        VerticalPanel mainPanel = new VerticalPanel();
+        VerticalPanel secondaryPanel = new VerticalPanel();
 
-        addWidgets(panel);
+        deckPanel.add(mainPanel);
+        deckPanel.add(secondaryPanel);
+        deckPanel.showWidget(0);
+
+        rootPanel.add(menu);
+        rootPanel.add(deckPanel);
+
+        addMainPanelWidgets(mainPanel);
+        addSeconaryPanelWidgets(secondaryPanel);
         addMenuOptions(menu);
+    }
+
+    private void addSeconaryPanelWidgets(VerticalPanel secondaryPanel) {
+        secondaryPanel.add(new Label("welcome"));
+        Button returnButton = new Button("Return to main menu");
+        returnButton.addClickHandler(event -> {
+            deckPanel.showWidget(0);
+        });
+        secondaryPanel.add(returnButton);
     }
 
     private void addMenuOptions(MenuBar menu) {
         menu.addItem("New", new CreateMenuItem());
+        menu.addItem("Find", new PhoneCallSearchItem());
         menu.addItem("Help", new HelpMenuItem());
     }
 
@@ -245,6 +264,18 @@ public class PhoneBillGwt implements EntryPoint {
                 @Override
                 public void execute() {
                     p.show();
+                }
+            }));
+        }
+    }
+
+    private class PhoneCallSearchItem extends MenuBar {
+        PhoneCallSearchItem() {
+            // TODO switch deck
+            addItem(new MenuItem("Phone call", new Scheduler.ScheduledCommand() {
+                @Override
+                public void execute() {
+                    deckPanel.showWidget(1);
                 }
             }));
         }

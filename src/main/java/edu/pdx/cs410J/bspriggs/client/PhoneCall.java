@@ -20,8 +20,8 @@ public class PhoneCall extends AbstractPhoneCall {
     private Date startDate;
     private Date endDate;
 
-    private static final String phoneNumberPattern = "\\d{3}-\\d{3}-\\d{4}";
-    private static final String dateFormat = "mm/dd/yyyy hh:mm a";
+    public static final String phoneNumberPattern = "\\d{3}-\\d{3}-\\d{4}";
+    public static final String dateFormat = "mm/dd/yyyy hh:mm a";
 
     public PhoneCall() {
         this("","",null, null);
