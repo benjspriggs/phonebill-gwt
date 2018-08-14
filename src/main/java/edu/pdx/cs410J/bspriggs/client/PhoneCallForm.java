@@ -35,10 +35,24 @@ public class PhoneCallForm extends FormPanel {
         add(p);
 
         addSubmitHandler(event -> {
-            String caller = (String) values.get("caller").getValue();
-            String callee = (String) values.get("callee").getValue();
-            Date startTime = PhoneCall.parseDate(values.get("startTime").getValue());
-            Date endTime = PhoneCall.parseDate(values.get("endTime").getValue());
+            String caller = values.get("caller").getValue();
+            String callee = values.get("callee").getValue();
+            Date startTime;
+            Date endTime;
+
+            try {
+                startTime = PhoneCall.parseDate(values.get("startTime").getValue());
+                endTime = PhoneCall.parseDate(values.get("endTime").getValue());
+            } catch (Exception e) {
+                event.cancel();
+                return;
+            }
+
+            if (startTime == null || endTime == null) {
+                event.cancel();
+                return;
+            }
+
             PhoneCall call = new PhoneCall(caller, callee, startTime, endTime);
             phoneBillService.addPhoneCallToBill(customer, call, new AsyncCallback<Void>() {
                 @Override

@@ -10,6 +10,7 @@ import org.gwtbootstrap3.client.ui.PageHeader;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 
 public class PhoneBillView extends VerticalPanel {
+    private final Button closeButton;
     /**
      * The view of the currently selected {@link PhoneBill}.
      */
@@ -34,6 +35,12 @@ public class PhoneBillView extends VerticalPanel {
         addCallButton.addClickHandler(event -> {
             newCallDialog.show();
         });
+
+        closeButton = new Button("Close");
+        closeButton.addClickHandler(event -> {
+            newCallDialog.hide(true);
+        });
+        dialogPanel.add(closeButton);
 
         add(new PhoneBillForm());
         add(new Heading(HeadingSize.H3, "Available calls"));
@@ -69,10 +76,6 @@ public class PhoneBillView extends VerticalPanel {
         });
         dialogPanel.add(form);
 
-        Button closeButton = new Button("Close");
-        closeButton.addClickHandler(event -> {
-            newCallDialog.hide(true);
-        });
         dialogPanel.add(closeButton);
     }
 
