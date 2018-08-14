@@ -60,12 +60,7 @@ class PhoneCallSearchRangeView extends VerticalPanel {
             phoneBillServiceAsync = GWT.create(PhoneBillService.class);
 
             setSubmitOnEnter(true);
-            addSubmitCompleteHandler(new SubmitCompleteHandler() {
-                @Override
-                public void onSubmitComplete(SubmitCompleteEvent submitCompleteEvent) {
-                    searchPhoneCalls();
-                }
-            });
+            addSubmitCompleteHandler(submitCompleteEvent -> searchPhoneCalls());
 
             FieldSet f = new FieldSet();
             f.add(new Legend("Search Range"));
