@@ -38,6 +38,9 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
 
   @Override
   public boolean equals(Object o) {
+      if (o == null)
+        return false;
+
     if (o == this) {
       return true;
     }
@@ -48,7 +51,7 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
 
     PhoneBill comparing = (PhoneBill) o;
 
-    return comparing.getCustomer().contentEquals(getCustomer())
+    return getCustomer().contentEquals(comparing.getCustomer())
             && getPhoneCalls().containsAll(comparing.getPhoneCalls())
             && comparing.getPhoneCalls().containsAll(getPhoneCalls());
   }

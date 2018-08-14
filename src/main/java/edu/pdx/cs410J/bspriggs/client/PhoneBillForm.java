@@ -1,10 +1,11 @@
 package edu.pdx.cs410J.bspriggs.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.HasValue;
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.gwt.FormPanel;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -24,16 +25,11 @@ public class PhoneBillForm extends FormPanel {
     PhoneBillForm() {
         this.phoneBillService = GWT.create(PhoneBillService.class);
 
-        setAction(GWT.getModuleBaseURL() + "bill");
-        setEncoding(FormPanel.ENCODING_MULTIPART);
-        setMethod(FormPanel.METHOD_POST);
-
-        VerticalPanel p = new VerticalPanel();
-        addWidgets(p);
-        add(p);
+        FieldSet set = new FieldSet();
+        addWidgets(set);
+        add(set);
 
         addSubmitHandler(event -> {
-            // TODO: validation here
             phoneBillService.createPhoneBill(values.get("customer").getValue(), new AsyncCallback<Void>() {
                 @Override
                 public void onFailure(Throwable throwable) {
@@ -47,25 +43,30 @@ public class PhoneBillForm extends FormPanel {
         });
     }
 
-    private void addWidgets(Panel p) {
+    private void addWidgets(FieldSet set) {
         for (Map.Entry<String, String> pair: FIELDS.entrySet()) {
             String name = pair.getKey();
             String displayName = pair.getValue();
 
-            final HorizontalPanel hp = new HorizontalPanel();
-            final TextBox tb = new TextBox();
-            final Label tbl = new Label(displayName + ":");
-            tbl.addClickListener(event -> tb.setFocus(true));
-            tb.setName(name);
+            FormGroup formGroup = new FormGroup();
 
-            hp.add(tbl);
-            hp.add(tb);
+            FormLabel label = new FormLabel();
+            label.setFor(name);
+            label.setText(displayName);
 
-            p.add(hp);
+            Input input = new Input();
+            input.setId(name);
+            input.setAllowBlank(false);
+            input.setValidateOnBlur(true);
 
-            values.put(name, tb);
+            formGroup.add(label);
+            formGroup.add(input);
+
+            set.add(formGroup);
+
+            values.put(name, input);
         }
 
-        p.add(new Button("Submit", (ClickHandler) event -> this.submit()));
+        set.add(new Button("Submit", event -> this.submit()));
     }
 }
