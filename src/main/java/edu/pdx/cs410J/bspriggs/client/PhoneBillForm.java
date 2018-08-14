@@ -5,6 +5,7 @@ import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.FormType;
 import org.gwtbootstrap3.client.ui.gwt.FormPanel;
 
 import java.util.Collections;
@@ -23,6 +24,7 @@ public class PhoneBillForm extends FormPanel {
     }
 
     PhoneBillForm() {
+        setType(FormType.INLINE);
         this.phoneBillService = GWT.create(PhoneBillService.class);
 
         FieldSet set = new FieldSet();
@@ -67,6 +69,6 @@ public class PhoneBillForm extends FormPanel {
             values.put(name, input);
         }
 
-        set.add(new Button("Submit", event -> this.submit()));
+        set.add(new Button("Create Phone Bill", event -> this.submit()));
     }
 }

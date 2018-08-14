@@ -2,7 +2,6 @@ package edu.pdx.cs410J.bspriggs.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
-import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import org.gwtbootstrap3.client.ui.ListBox;
 
@@ -43,7 +42,7 @@ public class PhoneBillChooser extends ListBox {
             @Override
             public void onFailure(Throwable throwable) {
                 // TODO: probably should do something
-                Window.alert(throwable.toString());
+                // Window.alert(throwable.toString());
             }
 
             @Override
@@ -55,9 +54,9 @@ public class PhoneBillChooser extends ListBox {
                 bills = strings;
                 clear();
                 bills.forEach(PhoneBillChooser.super::addItem);
-
             }
         });
+
 
         phoneBillService.getPhoneBill(getSelectedItemText(), onUpdate);
     }

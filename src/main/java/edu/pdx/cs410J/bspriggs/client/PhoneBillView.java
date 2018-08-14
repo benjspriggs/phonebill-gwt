@@ -4,7 +4,9 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.PageHeader;
+import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 
 public class PhoneBillView extends VerticalPanel {
     /**
@@ -21,6 +23,7 @@ public class PhoneBillView extends VerticalPanel {
     PhoneBillView() {
         PageHeader header = new PageHeader();
         header.setText("Phone Bills");
+        header.setSubText("View existing phone bills and add new calls");
         add(header);
 
         newCallDialog.setWidget(dialogPanel);
@@ -31,6 +34,8 @@ public class PhoneBillView extends VerticalPanel {
             newCallDialog.show();
         });
 
+        add(new PhoneBillForm());
+        add(new Heading(HeadingSize.H3, "Available calls"));
         add(new PhoneBillChooser(new AsyncCallback<PhoneBill>() {
             @Override
             public void onFailure(Throwable throwable) {

@@ -1,17 +1,24 @@
 package edu.pdx.cs410J.bspriggs.client;
 
-import com.google.gwt.user.client.ui.Grid;
-import com.google.gwt.user.client.ui.Label;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import com.google.gwt.user.client.ui.Widget;
+import org.gwtbootstrap3.client.ui.Column;
+import org.gwtbootstrap3.client.ui.Container;
+import org.gwtbootstrap3.client.ui.Heading;
+import org.gwtbootstrap3.client.ui.Row;
+import org.gwtbootstrap3.client.ui.constants.HeadingSize;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
 import java.util.stream.IntStream;
 
+import static org.gwtbootstrap3.client.ui.constants.ColumnSize.MD_3;
+
 class PhoneBillList extends VerticalPanel {
-    private Label customerLabel = new Label("No customer selected.");
-    private Grid callGrid = new Grid();
+    private Heading customerLabel = new Heading(HeadingSize.H2, "No customer selected.");
+    private Container callGrid = new Container();
     private PhoneBill bill;
 
     PhoneBillList() {
@@ -34,8 +41,7 @@ class PhoneBillList extends VerticalPanel {
         this.bill = bill;
 
         customerLabel.setText("Customer: " + bill.getCustomer());
-
-        callGrid.resize(bill.getPhoneCalls().size() + 1, 4);
+        callGrid.clear();
         addHeader();
 
         Collection<PhoneCall> calls = bill.getPhoneCalls();
@@ -45,17 +51,31 @@ class PhoneBillList extends VerticalPanel {
 
         IntStream.range(1, calls.size() + 1).forEach(i -> {
             PhoneCall call = cn.next();
-            callGrid.setText(i, 0, call.getCaller());
-            callGrid.setText(i, 1, call.getCallee());
-            callGrid.setText(i, 2, call.getStartTimeString());
-            callGrid.setText(i, 3, call.getEndTimeString());
+            Row row = new Row();
+            row.add(columnFor(call.getCaller()));
+            row.add(columnFor(call.getCallee()));
+            row.add(columnFor(call.getStartTimeString()));
+            row.add(columnFor(call.getEndTimeString()));
+
+            callGrid.add(row);
         });
     }
 
+    private static Widget columnFor(String s) {
+        Column col = new Column(MD_3);
+        Paragraph p = new Paragraph();
+        p.setText(s);
+        col.add(p);
+        return col;
+    }
+
     private void addHeader() {
-        callGrid.setText(0, 0, "Caller");
-        callGrid.setText(0, 1, "Callee");
-        callGrid.setText(0, 2, "Start Time");
-        callGrid.setText(0, 3, "End Time");
+        Row headerRow = new Row();
+        headerRow.add(columnFor("Caller"));
+        headerRow.add(columnFor("Callee"));
+        headerRow.add(columnFor("Start Time"));
+        headerRow.add(columnFor("End Time"));
+
+        callGrid.add(headerRow);
     }
 }

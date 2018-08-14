@@ -10,6 +10,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import org.gwtbootstrap3.client.ui.Container;
 import org.gwtbootstrap3.client.ui.PageHeader;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 import java.util.Collection;
 import java.util.logging.Level;
@@ -208,11 +209,6 @@ public class PhoneBillGwt implements EntryPoint {
             deckPanel.showWidget(0);
         });
 
-        PhoneBillPopup p = new PhoneBillPopup();
-        menu.addItem("New Phone Bill", click -> {
-            p.show();
-        });
-
         menu.addItem("Search", click -> {
             deckPanel.showWidget(1);
         });
@@ -243,7 +239,7 @@ public class PhoneBillGwt implements EntryPoint {
             Button closeMe = new Button("Close");
             closeMe.addClickHandler(event -> hide());
 
-            Label l = new Label(getReadme());
+            Paragraph l = new Paragraph(getReadme());
 
             p.add(l);
             p.add(closeMe);
@@ -254,24 +250,6 @@ public class PhoneBillGwt implements EntryPoint {
             return "This is an application to keep track of phone bills and phone calls on each bill.\n" +
                     "To create a new phone bill, click on 'New -> Phone Bill'. To add a call to an existing" +
                     "phone bill, click on the 'Add Phone Call' button and fill out the form.";
-        }
-    }
-
-    private static class PhoneBillPopup extends DialogBox {
-        PhoneBillPopup() {
-            setText("New Phone Bill");
-            setAnimationEnabled(true);
-            setGlassEnabled(true);
-
-            VerticalPanel p = new VerticalPanel();
-            Button closeMe = new Button("Close");
-            closeMe.addClickHandler(event -> hide());
-            PhoneBillForm form = new PhoneBillForm();
-            form.addSubmitHandler(event -> hide());
-
-            p.add(new PhoneBillForm());
-            p.add(closeMe);
-            setWidget(p);
         }
     }
 }
