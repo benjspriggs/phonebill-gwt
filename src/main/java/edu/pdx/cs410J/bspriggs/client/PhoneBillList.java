@@ -10,7 +10,7 @@ import java.util.Iterator;
 import java.util.stream.IntStream;
 
 class PhoneBillList extends VerticalPanel {
-    private Label customerLabel = new Label("NO CUSTOMER SELECTED");
+    private Label customerLabel = new Label("No customer selected.");
     private Grid callGrid = new Grid();
     private PhoneBill bill;
 

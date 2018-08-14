@@ -8,6 +8,7 @@ import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import org.gwtbootstrap3.client.ui.PageHeader;
 
 import java.util.Collection;
 import java.util.logging.Level;
@@ -183,7 +184,14 @@ public class PhoneBillGwt implements EntryPoint {
     }
 
     private void addSeconaryPanelWidgets(VerticalPanel secondaryPanel) {
-        secondaryPanel.add(new Label("welcome"));
+        PageHeader searchHeader = new PageHeader();
+        searchHeader.setText("Search");
+        searchHeader.setSubText("Choose an existing phone bill and search for calls within a date range");
+
+        secondaryPanel.add(searchHeader);
+
+        secondaryPanel.add(new PhoneCallSearchRangeView());
+
         Button returnButton = new Button("Return to main menu");
         returnButton.addClickHandler(event -> {
             deckPanel.showWidget(0);
@@ -224,9 +232,9 @@ public class PhoneBillGwt implements EntryPoint {
         }
 
         private String getReadme() {
-            return "This is an application to keep track of phone bills and phone calls on each bill." +
+            return "This is an application to keep track of phone bills and phone calls on each bill.\n" +
                     "To create a new phone bill, click on 'New -> Phone Bill'. To add a call to an existing" +
-                    "phone bill, click on the 'Add Phone Call' button and fill out the form. ";
+                    "phone bill, click on the 'Add Phone Call' button and fill out the form.";
         }
     }
 

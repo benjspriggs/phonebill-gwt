@@ -3,10 +3,10 @@ package edu.pdx.cs410J.bspriggs.client;
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.Timer;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.Button;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.ListBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
+import org.gwtbootstrap3.client.ui.Button;
 import org.gwtbootstrap3.client.ui.PageHeader;
 
 import java.util.ArrayList;
@@ -27,43 +27,42 @@ public class PhoneBillView extends VerticalPanel {
     /**
      * Dialog displayed when user clicks to add a new phone call.
      */
-    private DialogBox newCallDialog = new DialogBox();
+    private NewCallDialog newCallDialog = new NewCallDialog();
     private VerticalPanel dialogPanel = new VerticalPanel();
 
     PhoneBillView() {
         phoneBillService = GWT.create(PhoneBillService.class);
 
         PageHeader header = new PageHeader();
-        header.setText("Available Phone Bills");
+        header.setText("Phone Bills");
         add(header);
 
-        ListBox l = new ListBox();
-        l.addChangeHandler(change -> {
-            refreshAvailablePhoneBills(l);
+        ListBox phoneBillChooser = new ListBox();
+        phoneBillChooser.addChangeHandler(change -> {
+            refreshAvailablePhoneBills(phoneBillChooser);
         });
 
-        refreshAvailablePhoneBills(l);
+        refreshAvailablePhoneBills(phoneBillChooser);
 
         Timer t = new Timer() {
             @Override
             public void run() {
-                refreshAvailablePhoneBills(l);
+                refreshAvailablePhoneBills(phoneBillChooser);
             }
         };
         t.scheduleRepeating(100);
 
-        newCallDialog.add(dialogPanel);
-        newCallDialog.setGlassEnabled(true);
-        newCallDialog.setAnimationEnabled(true);
+        newCallDialog.setWidget(dialogPanel);
+
         Button addCallButton = new Button("Add new Phone Call");
 
         addCallButton.addClickHandler(event -> {
             newCallDialog.show();
         });
 
-        add(l);
-        add(newCallDialog);
+        add(phoneBillChooser);
         add(list);
+        add(addCallButton);
     }
 
     /**
@@ -134,5 +133,11 @@ public class PhoneBillView extends VerticalPanel {
         dialogPanel.add(closeButton);
     }
 
-
+    private class NewCallDialog extends DialogBox {
+        NewCallDialog() {
+            setText("Add a new phone call");
+            setAnimationEnabled(true);
+            setGlassEnabled(true);
+        }
+    }
 }
