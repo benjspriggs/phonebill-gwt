@@ -8,6 +8,7 @@ import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Window;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
+import org.gwtbootstrap3.client.ui.Container;
 import org.gwtbootstrap3.client.ui.PageHeader;
 
 import java.util.Collection;
@@ -167,16 +168,19 @@ public class PhoneBillGwt implements EntryPoint {
 
     private void setupUI() {
         RootPanel rootPanel = RootPanel.get();
-        MenuBar menu = new MenuBar();
+        PhoneBillGWTMenu menu = new PhoneBillGWTMenu();
         VerticalPanel mainPanel = new VerticalPanel();
         VerticalPanel secondaryPanel = new VerticalPanel();
+        Container rootContainer = new Container();
 
         deckPanel.add(mainPanel);
         deckPanel.add(secondaryPanel);
         deckPanel.showWidget(0);
 
-        rootPanel.add(menu);
-        rootPanel.add(deckPanel);
+        rootContainer.add(menu);
+        rootContainer.add(deckPanel);
+
+        rootPanel.add(rootContainer);
 
         addMainPanelWidgets(mainPanel);
         addSeconaryPanelWidgets(secondaryPanel);
@@ -199,10 +203,25 @@ public class PhoneBillGwt implements EntryPoint {
         secondaryPanel.add(returnButton);
     }
 
-    private void addMenuOptions(MenuBar menu) {
-        menu.addItem("New", new CreateMenuItem());
-        menu.addItem("Find", new PhoneCallSearchItem());
-        menu.addItem("Help", new HelpMenuItem());
+    private void addMenuOptions(PhoneBillGWTMenu menu) {
+        menu.addItem("Home", click -> {
+            deckPanel.showWidget(0);
+        });
+
+        PhoneBillPopup p = new PhoneBillPopup();
+        menu.addItem("New Phone Bill", click -> {
+            p.show();
+        });
+
+        menu.addItem("Search", click -> {
+            deckPanel.showWidget(1);
+        });
+
+        ReadmePopup r = new ReadmePopup();
+
+        menu.addItem("Help", click -> {
+            r.show();
+        });
     }
 
     private void setUpUncaughtExceptionHandler() {
