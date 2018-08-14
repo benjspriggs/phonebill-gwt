@@ -6,13 +6,11 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.*;
 import org.gwtbootstrap3.client.ui.Container;
 import org.gwtbootstrap3.client.ui.PageHeader;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
-import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -23,19 +21,6 @@ public class PhoneBillGwt implements EntryPoint {
     private final Alerter alerter;
     private final PhoneBillServiceAsync phoneBillService;
     private final Logger logger;
-
-
-    @VisibleForTesting
-    Button showPhoneBillButton;
-
-    @VisibleForTesting
-    Button showUndeclaredExceptionButton;
-
-    @VisibleForTesting
-    Button showDeclaredExceptionButton;
-
-    @VisibleForTesting
-    Button showClientSideExceptionButton;
 
     private DeckPanel deckPanel = new DeckPanel();
 
@@ -79,82 +64,7 @@ public class PhoneBillGwt implements EntryPoint {
     }
 
     private void addMainPanelWidgets(VerticalPanel panel) {
-        showPhoneBillButton = new Button("Show Phone Bill");
-        showPhoneBillButton.addClickHandler(clickEvent -> showPhoneBill());
-
-        showUndeclaredExceptionButton = new Button("Show undeclared exception");
-        showUndeclaredExceptionButton.addClickHandler(clickEvent -> showUndeclaredException());
-
-        showDeclaredExceptionButton = new Button("Show declared exception");
-        showDeclaredExceptionButton.addClickHandler(clickEvent -> showDeclaredException());
-
-        showClientSideExceptionButton= new Button("Show client-side exception");
-        showClientSideExceptionButton.addClickHandler(clickEvent -> throwClientSideException());
-
-        /*
-        panel.add(showPhoneBillButton);
-        panel.add(showUndeclaredExceptionButton);
-        panel.add(showDeclaredExceptionButton);
-        panel.add(showClientSideExceptionButton);
-        */
         panel.add(new PhoneBillView());
-    }
-
-    private void throwClientSideException() {
-        logger.info("About to throw a client-side exception");
-        throw new IllegalStateException("Expected exception on the client side");
-    }
-
-    private void showUndeclaredException() {
-        logger.info("Calling throwUndeclaredException");
-        phoneBillService.throwUndeclaredException(new AsyncCallback<Void>() {
-            @Override
-            public void onFailure(Throwable ex) {
-                alertOnException(ex);
-            }
-
-            @Override
-            public void onSuccess(Void aVoid) {
-                alerter.alert("This shouldn't happen");
-            }
-        });
-    }
-
-    private void showDeclaredException() {
-        logger.info("Calling throwDeclaredException");
-        phoneBillService.throwDeclaredException(new AsyncCallback<Void>() {
-            @Override
-            public void onFailure(Throwable ex) {
-                alertOnException(ex);
-            }
-
-            @Override
-            public void onSuccess(Void aVoid) {
-                alerter.alert("This shouldn't happen");
-            }
-        });
-    }
-
-    private void showPhoneBill() {
-        logger.info("Calling getPhoneBill");
-        phoneBillService.getPhoneBill("CS410J", new AsyncCallback<PhoneBill>() {
-
-            @Override
-            public void onFailure(Throwable ex) {
-                alertOnException(ex);
-            }
-
-            @Override
-            public void onSuccess(PhoneBill phoneBill) {
-                StringBuilder sb = new StringBuilder(phoneBill.toString());
-                Collection<PhoneCall> calls = phoneBill.getPhoneCalls();
-                for (PhoneCall call : calls) {
-                    sb.append(call);
-                    sb.append("\n");
-                }
-                alerter.alert(sb.toString());
-            }
-        });
     }
 
     @Override
@@ -166,9 +76,9 @@ public class PhoneBillGwt implements EntryPoint {
         Scheduler.get().scheduleDeferred(this::setupUI);
     }
 
-
     private void setupUI() {
         RootPanel rootPanel = RootPanel.get();
+
         PhoneBillGWTMenu menu = new PhoneBillGWTMenu();
         VerticalPanel mainPanel = new VerticalPanel();
         VerticalPanel secondaryPanel = new VerticalPanel();
@@ -184,11 +94,11 @@ public class PhoneBillGwt implements EntryPoint {
         rootPanel.add(rootContainer);
 
         addMainPanelWidgets(mainPanel);
-        addSeconaryPanelWidgets(secondaryPanel);
+        addSecondaryPanelWidgets(secondaryPanel);
         addMenuOptions(menu);
     }
 
-    private void addSeconaryPanelWidgets(VerticalPanel secondaryPanel) {
+    private void addSecondaryPanelWidgets(VerticalPanel secondaryPanel) {
         PageHeader searchHeader = new PageHeader();
         searchHeader.setText("Search");
         searchHeader.setSubText("Choose an existing phone bill and search for calls within a date range");
