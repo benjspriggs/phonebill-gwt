@@ -274,37 +274,4 @@ public class PhoneBillGwt implements EntryPoint {
             setWidget(p);
         }
     }
-
-    private static class HelpMenuItem extends MenuBar {
-        HelpMenuItem() {
-            ReadmePopup readme = new ReadmePopup();
-            // readme.setPopupPosition(Window.getClientWidth() / 2, Window.getClientHeight() / 2);
-            addItem(new MenuItem("README", readme::show));
-        }
-    }
-
-    private class CreateMenuItem extends MenuBar {
-        CreateMenuItem() {
-            PhoneBillPopup p = new PhoneBillPopup();
-            // p.setPopupPosition(Window.getClientWidth() / 2, Window.getClientHeight() / 2);
-            addItem(new MenuItem("Phone bill", new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    p.show();
-                }
-            }));
-        }
-    }
-
-    private class PhoneCallSearchItem extends MenuBar {
-        PhoneCallSearchItem() {
-            // TODO switch deck
-            addItem(new MenuItem("Phone call", new Scheduler.ScheduledCommand() {
-                @Override
-                public void execute() {
-                    deckPanel.showWidget(1);
-                }
-            }));
-        }
-    }
 }
