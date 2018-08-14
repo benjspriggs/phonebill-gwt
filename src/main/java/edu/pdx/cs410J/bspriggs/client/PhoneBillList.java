@@ -12,6 +12,7 @@ import org.gwtbootstrap3.client.ui.html.Paragraph;
 import java.util.Collection;
 import java.util.Comparator;
 import java.util.Iterator;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import static org.gwtbootstrap3.client.ui.constants.ColumnSize.MD_3;
@@ -44,7 +45,28 @@ class PhoneBillList extends VerticalPanel {
         callGrid.clear();
         addHeader();
 
-        Collection<PhoneCall> calls = bill.getPhoneCalls();
+        addCallsToContainer(bill.getPhoneCalls());
+    }
+
+    boolean updateSomeIfChanged(PhoneBill bill, List<PhoneCall> some) {
+        if (bill == null)
+            return false;
+
+        updateSome(bill, some);
+        return true;
+    }
+
+    void updateSome(PhoneBill bill, List<PhoneCall> some) {
+        this.bill = bill;
+
+        customerLabel.setText("(partial) Customer: " + bill.getCustomer());
+        callGrid.clear();
+        addHeader();
+
+        addCallsToContainer(some);
+    }
+
+    private void addCallsToContainer(Collection<PhoneCall> calls){
         Iterator<PhoneCall> cn = calls.stream()
                 .sorted(Comparator.comparing(PhoneCall::getStartTime))
                 .iterator();

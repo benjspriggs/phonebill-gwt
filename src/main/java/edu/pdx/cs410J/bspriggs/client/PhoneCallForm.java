@@ -1,9 +1,11 @@
 package edu.pdx.cs410J.bspriggs.client;
 
 import com.google.gwt.core.client.GWT;
-import com.google.gwt.event.dom.client.ClickHandler;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.*;
+import com.google.gwt.user.client.ui.HasValue;
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.FormType;
+import org.gwtbootstrap3.client.ui.gwt.FormPanel;
 
 import java.util.Collections;
 import java.util.Date;
@@ -26,19 +28,15 @@ public class PhoneCallForm extends FormPanel {
 
     PhoneCallForm(String customer) {
         this.phoneBillService = GWT.create(PhoneBillService.class);
+        setType(FormType.HORIZONTAL);
 
-        setAction(GWT.getModuleBaseURL() + "call");
-        setEncoding(FormPanel.ENCODING_MULTIPART);
-        setMethod(FormPanel.METHOD_POST);
-
-        VerticalPanel p = new VerticalPanel();
+        FieldSet p = new FieldSet();
         addWidgets(p);
         add(p);
 
         addSubmitHandler(event -> {
-            // TODO: validation here
-            String caller = values.get("caller").getValue();
-            String callee = values.get("callee").getValue();
+            String caller = (String) values.get("caller").getValue();
+            String callee = (String) values.get("callee").getValue();
             Date startTime = PhoneCall.parseDate(values.get("startTime").getValue());
             Date endTime = PhoneCall.parseDate(values.get("endTime").getValue());
             PhoneCall call = new PhoneCall(caller, callee, startTime, endTime);
@@ -54,28 +52,37 @@ public class PhoneCallForm extends FormPanel {
         });
     }
 
-    private void addWidgets(Panel p) {
-        Label l = new Label("Create a new Phone call");
-        p.add(l);
-
+    private void addWidgets(FieldSet set) {
         for (Map.Entry<String, String> pair: FIELDS.entrySet()) {
             String name = pair.getKey();
             String displayName = pair.getValue();
 
-            final HorizontalPanel hp = new HorizontalPanel();
-            final TextBox tb = new TextBox();
-            final Label tbl = new Label(displayName + ":");
-            tbl.addClickListener(event -> tb.setFocus(true));
-            tb.setName(name);
+            if (name.contains("Time")) {
+                FormattedDateBox db = new FormattedDateBox(name, displayName);
+                set.add(db);
+                values.put(name, db.picker.getTextBox());
+                continue;
+            }
 
-            hp.add(tbl);
-            hp.add(tb);
+            FormGroup formGroup = new FormGroup();
 
-            p.add(hp);
+            FormLabel label = new FormLabel();
+            label.setFor(name);
+            label.setText(displayName);
 
-            values.put(name, tb);
+            Input input = new Input();
+            input.setId(name);
+            input.setAllowBlank(false);
+            input.setValidateOnBlur(true);
+
+            formGroup.add(label);
+            formGroup.add(input);
+
+            set.add(formGroup);
+
+            values.put(name, input);
         }
 
-        p.add(new Button("Submit", (ClickHandler) event -> this.submit()));
+        set.add(new Button("Submit", event -> this.submit()));
     }
 }

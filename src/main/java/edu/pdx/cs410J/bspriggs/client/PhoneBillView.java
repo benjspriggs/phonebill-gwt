@@ -4,6 +4,7 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
 import org.gwtbootstrap3.client.ui.Button;
+import org.gwtbootstrap3.client.ui.Container;
 import org.gwtbootstrap3.client.ui.Heading;
 import org.gwtbootstrap3.client.ui.PageHeader;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
@@ -18,7 +19,7 @@ public class PhoneBillView extends VerticalPanel {
      * Dialog displayed when user clicks to add a new phone call.
      */
     private NewCallDialog newCallDialog = new NewCallDialog();
-    private VerticalPanel dialogPanel = new VerticalPanel();
+    private Container dialogPanel = new Container();
 
     PhoneBillView() {
         PageHeader header = new PageHeader();
