@@ -83,20 +83,29 @@ class PhoneBillList extends VerticalPanel {
         });
     }
 
-    private static Widget columnFor(String s) {
+    private static Widget columnFor(String s, boolean header) {
         Column col = new Column(MD_3);
-        Paragraph p = new Paragraph();
-        p.setText(s);
-        col.add(p);
+        if (header) {
+            Heading h = new Heading(HeadingSize.H4, s);
+            col.add(h);
+        } else {
+            Paragraph p = new Paragraph();
+            p.setText(s);
+            col.add(p);
+        }
         return col;
+    }
+
+    private static Widget columnFor(String s) {
+        return columnFor(s, false);
     }
 
     private void addHeader() {
         Row headerRow = new Row();
-        headerRow.add(columnFor("Caller"));
-        headerRow.add(columnFor("Callee"));
-        headerRow.add(columnFor("Start Time"));
-        headerRow.add(columnFor("End Time"));
+        headerRow.add(columnFor("Caller", true));
+        headerRow.add(columnFor("Callee", true));
+        headerRow.add(columnFor("Start Time", true));
+        headerRow.add(columnFor("End Time", true));
 
         callGrid.add(headerRow);
     }
