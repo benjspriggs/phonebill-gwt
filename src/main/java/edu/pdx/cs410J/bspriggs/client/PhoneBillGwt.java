@@ -6,9 +6,12 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.core.client.Scheduler;
 import com.google.gwt.event.shared.UmbrellaException;
 import com.google.gwt.user.client.Window;
-import com.google.gwt.user.client.ui.*;
-import org.gwtbootstrap3.client.ui.Container;
-import org.gwtbootstrap3.client.ui.PageHeader;
+import com.google.gwt.user.client.ui.DeckPanel;
+import com.google.gwt.user.client.ui.RootPanel;
+import com.google.gwt.user.client.ui.VerticalPanel;
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.ButtonDismiss;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 import java.util.logging.Level;
@@ -133,27 +136,38 @@ public class PhoneBillGwt implements EntryPoint {
         void alert(String message);
     }
 
-    private static class ReadmePopup extends DialogBox {
+    private static class ReadmePopup extends Modal {
         ReadmePopup() {
-            setText("README");
-            setAnimationEnabled(true);
-            setGlassEnabled(true);
+            ModalBody b = new ModalBody();
+            add(b);
 
-            VerticalPanel p = new VerticalPanel();
-            Button closeMe = new Button("Close");
-            closeMe.addClickHandler(event -> hide());
+            ModalFooter f = new ModalFooter();
+            add(f);
 
-            Paragraph l = new Paragraph(getReadme());
+            setTitle("README");
 
-            p.add(l);
-            p.add(closeMe);
-            setWidget(p);
+            Container p = new Container();
+            p.setFluid(true);
+
+            Button closeMe = new Button("Ok!");
+            closeMe.setDataDismiss(ButtonDismiss.MODAL);
+            closeMe.setType(ButtonType.SUCCESS);
+
+            for (String s : getReadme()) {
+                Paragraph l = new Paragraph(s);
+
+                p.add(l);
+            }
+
+            f.add(closeMe);
+            b.add(p);
         }
 
-        private String getReadme() {
-            return "This is an application to keep track of phone bills and phone calls on each bill.\n" +
-                    "To create a new phone bill, click on 'New -> Phone Bill'. To add a call to an existing" +
-                    "phone bill, click on the 'Add Phone Call' button and fill out the form.";
+        private String[] getReadme() {
+            return new String[]{"This is an application to keep track of phone bills and phone calls on each bill.",
+                    "To create a new phone bill, add a customer name and click on 'Create Phone Bill'. ",
+                    "To add a call to an existing phone bill, click on the 'Add Phone Call' button and fill out the form.",
+                "To search for calls in a bill, click on 'Search', select the customer and date range, and click 'Search'."};
         }
     }
 }
