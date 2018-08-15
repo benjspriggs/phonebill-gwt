@@ -25,6 +25,8 @@ public class PhoneBillView extends VerticalPanel {
         header.setSubText("View existing phone bills and add new calls");
         add(header);
 
+        dialogPanel.setFluid(true);
+
         newCallDialog.addWidget(dialogPanel);
 
         Button addCallButton = new Button("Add new Phone Call");
