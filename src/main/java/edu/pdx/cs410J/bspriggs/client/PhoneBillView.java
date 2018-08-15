@@ -1,16 +1,13 @@
 package edu.pdx.cs410J.bspriggs.client;
 
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.DialogBox;
 import com.google.gwt.user.client.ui.VerticalPanel;
-import org.gwtbootstrap3.client.ui.Button;
-import org.gwtbootstrap3.client.ui.Container;
-import org.gwtbootstrap3.client.ui.Heading;
-import org.gwtbootstrap3.client.ui.PageHeader;
+import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.ButtonDismiss;
+import org.gwtbootstrap3.client.ui.constants.ButtonType;
 import org.gwtbootstrap3.client.ui.constants.HeadingSize;
 
 public class PhoneBillView extends VerticalPanel {
-    private final Button closeButton;
     /**
      * The view of the currently selected {@link PhoneBill}.
      */
@@ -28,19 +25,13 @@ public class PhoneBillView extends VerticalPanel {
         header.setSubText("View existing phone bills and add new calls");
         add(header);
 
-        newCallDialog.setWidget(dialogPanel);
+        newCallDialog.addWidget(dialogPanel);
 
         Button addCallButton = new Button("Add new Phone Call");
 
         addCallButton.addClickHandler(event -> {
             newCallDialog.show();
         });
-
-        closeButton = new Button("Close");
-        closeButton.addClickHandler(event -> {
-            newCallDialog.hide(true);
-        });
-        dialogPanel.add(closeButton);
 
         add(new PhoneBillForm());
         add(new Heading(HeadingSize.H3, "Available calls"));
@@ -71,19 +62,30 @@ public class PhoneBillView extends VerticalPanel {
 
         PhoneCallForm form = new PhoneCallForm(customer);
 
-        form.addSubmitHandler(submit -> {
-            newCallDialog.hide(true);
-        });
         dialogPanel.add(form);
-
-        dialogPanel.add(closeButton);
     }
 
-    private class NewCallDialog extends DialogBox {
+    private class NewCallDialog extends Modal {
+        ModalBody b = new ModalBody();
+
         NewCallDialog() {
-            setText("Add a new phone call");
-            setAnimationEnabled(true);
-            setGlassEnabled(true);
+            setId("NewCallDialog");
+            setClosable(true);
+            setTitle("Add a new phone call");
+            setClosable(true);
+            setFade(true);
+            ModalFooter footer = new ModalFooter();
+            Button closeButton = new Button("Close");
+            closeButton.setDataDismiss(ButtonDismiss.MODAL);
+            closeButton.setType(ButtonType.DANGER);
+            footer.add(closeButton);
+
+            add(b);
+            add(footer);
+        }
+
+        public void addWidget(Container w) {
+            b.add(w);
         }
     }
 }

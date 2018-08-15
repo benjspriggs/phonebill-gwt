@@ -106,12 +106,6 @@ public class PhoneBillGwt implements EntryPoint {
         secondaryPanel.add(searchHeader);
 
         secondaryPanel.add(new PhoneCallSearchRangeView());
-
-        Button returnButton = new Button("Return to main menu");
-        returnButton.addClickHandler(event -> {
-            deckPanel.showWidget(0);
-        });
-        secondaryPanel.add(returnButton);
     }
 
     private void addMenuOptions(PhoneBillGWTMenu menu) {

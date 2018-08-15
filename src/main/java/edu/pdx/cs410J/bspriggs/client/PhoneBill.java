@@ -51,7 +51,7 @@ public class PhoneBill extends AbstractPhoneBill<PhoneCall> {
 
     PhoneBill comparing = (PhoneBill) o;
 
-    return getCustomer().contentEquals(comparing.getCustomer())
+    return StringUtils.equals(getCustomer(), comparing.getCustomer())
             && getPhoneCalls().containsAll(comparing.getPhoneCalls())
             && comparing.getPhoneCalls().containsAll(getPhoneCalls());
   }

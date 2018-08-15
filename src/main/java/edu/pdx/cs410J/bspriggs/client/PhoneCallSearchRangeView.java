@@ -2,12 +2,11 @@ package edu.pdx.cs410J.bspriggs.client;
 
 import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
-import com.google.gwt.user.client.ui.VerticalPanel;
 import org.gwtbootstrap3.client.ui.*;
 
 import java.util.List;
 
-class PhoneCallSearchRangeView extends VerticalPanel {
+class PhoneCallSearchRangeView extends Container {
     PhoneBillList list = new PhoneBillList();
     PhoneBill toSearch;
     boolean keepSearch = false;
@@ -48,9 +47,9 @@ class PhoneCallSearchRangeView extends VerticalPanel {
             FormGroup group = new FormGroup();
             group.add(startRange);
             group.add(endRange);
-
             f.add(group);
-            Button submitButton = new Button("Submit");
+
+            Button submitButton = new Button("Search");
             submitButton.addClickHandler(click -> submit());
 
             f.add(submitButton);

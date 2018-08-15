@@ -4,17 +4,11 @@ import com.google.gwt.i18n.shared.DateTimeFormat;
 import com.google.gwt.i18n.shared.DefaultDateTimeFormatInfo;
 import edu.pdx.cs410J.AbstractPhoneCall;
 
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Pattern;
 import java.util.Date;
 
 public class PhoneCall extends AbstractPhoneCall {
-    @NotNull
-    @Pattern(regexp=phoneNumberPattern)
     private String caller;
 
-    @NotNull
-    @Pattern(regexp=phoneNumberPattern)
     private String callee;
 
     private Date startDate;
@@ -40,6 +34,26 @@ public class PhoneCall extends AbstractPhoneCall {
 
     public static String formatDate(Date start) {
         return new DateTimeFormat(dateFormat, new DefaultDateTimeFormatInfo()){}.format(start);
+    }
+
+    public boolean validate() {
+        return invalidBecause() == InvalidPhoneReason.NONE;
+    }
+
+    public InvalidPhoneReason invalidBecause() {
+        if (!caller.matches(phoneNumberPattern)) {
+            return InvalidPhoneReason.CALLER;
+        }
+
+        if (!callee.matches(phoneNumberPattern)) {
+            return InvalidPhoneReason.CALLEE;
+        }
+
+        if (startDate.compareTo(endDate) > 0) {
+            return InvalidPhoneReason.DATE;
+        }
+
+        return InvalidPhoneReason.NONE;
     }
 
     @Override
@@ -84,7 +98,7 @@ public class PhoneCall extends AbstractPhoneCall {
 
         PhoneCall comparing = (PhoneCall) o;
 
-        return comparing.getCaller().contentEquals(getCaller())
+        return StringUtils.equals(getCaller(), comparing.getCaller())
                 && comparing.getCallee().contentEquals(getCallee())
                 && comparing.getStartTimeString().contentEquals(getStartTimeString())
                 && comparing.getEndTimeString().contentEquals(getEndTimeString());

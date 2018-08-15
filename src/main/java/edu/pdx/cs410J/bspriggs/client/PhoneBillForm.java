@@ -6,13 +6,12 @@ import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import org.gwtbootstrap3.client.ui.*;
 import org.gwtbootstrap3.client.ui.constants.FormType;
-import org.gwtbootstrap3.client.ui.gwt.FormPanel;
 
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PhoneBillForm extends FormPanel {
+public class PhoneBillForm extends Form {
     private static final Map<String, String> FIELDS = init();
     private HashMap<String, HasValue<String>> values = new HashMap<>();
     private final PhoneBillServiceAsync phoneBillService;
@@ -32,6 +31,11 @@ public class PhoneBillForm extends FormPanel {
         add(set);
 
         addSubmitHandler(event -> {
+            if (!validate()) {
+                event.cancel();
+                return;
+            }
+
             phoneBillService.createPhoneBill(values.get("customer").getValue(), new AsyncCallback<Void>() {
                 @Override
                 public void onFailure(Throwable throwable) {

@@ -4,16 +4,16 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import org.gwtbootstrap3.client.ui.*;
-import org.gwtbootstrap3.client.ui.constants.FormType;
-import org.gwtbootstrap3.client.ui.gwt.FormPanel;
+import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class PhoneCallForm extends FormPanel {
+public class PhoneCallForm extends Form {
     private static final Map<String, String> FIELDS = init();
+    private final Paragraph errorDisplay = new Paragraph();
     private HashMap<String, HasValue<String>> values = new HashMap<>();
     private final PhoneBillServiceAsync phoneBillService;
 
@@ -28,32 +28,31 @@ public class PhoneCallForm extends FormPanel {
 
     PhoneCallForm(String customer) {
         this.phoneBillService = GWT.create(PhoneBillService.class);
-        setType(FormType.HORIZONTAL);
 
         FieldSet p = new FieldSet();
         addWidgets(p);
         add(p);
 
         addSubmitHandler(event -> {
+            if (!validate()) {
+                event.cancel();
+                return;
+            }
+
             String caller = values.get("caller").getValue();
             String callee = values.get("callee").getValue();
-            Date startTime;
-            Date endTime;
-
-            try {
-                startTime = PhoneCall.parseDate(values.get("startTime").getValue());
-                endTime = PhoneCall.parseDate(values.get("endTime").getValue());
-            } catch (Exception e) {
-                event.cancel();
-                return;
-            }
-
-            if (startTime == null || endTime == null) {
-                event.cancel();
-                return;
-            }
+            Date startTime = PhoneCall.parseDate(values.get("startTime").getValue());
+            Date endTime = PhoneCall.parseDate(values.get("endTime").getValue());
 
             PhoneCall call = new PhoneCall(caller, callee, startTime, endTime);
+
+            if (!call.validate()) {
+                InvalidPhoneReason r = call.invalidBecause();
+                errorDisplay.setText("The thing was invalid because: " + r.toString());
+                event.cancel();
+                return;
+            }
+
             phoneBillService.addPhoneCallToBill(customer, call, new AsyncCallback<Void>() {
                 @Override
                 public void onFailure(Throwable throwable) {
@@ -97,6 +96,9 @@ public class PhoneCallForm extends FormPanel {
             values.put(name, input);
         }
 
+        set.add(errorDisplay);
+
         set.add(new Button("Submit", event -> this.submit()));
+        set.add(new Button("Reset", event -> this.reset()));
     }
 }
