@@ -4,6 +4,7 @@ import com.google.gwt.core.client.GWT;
 import com.google.gwt.user.client.rpc.AsyncCallback;
 import com.google.gwt.user.client.ui.HasValue;
 import org.gwtbootstrap3.client.ui.*;
+import org.gwtbootstrap3.client.ui.constants.ContextualBackground;
 import org.gwtbootstrap3.client.ui.html.Paragraph;
 
 import java.util.Collections;
@@ -29,6 +30,8 @@ public class PhoneCallForm extends Form {
     PhoneCallForm(String customer) {
         this.phoneBillService = GWT.create(PhoneBillService.class);
 
+        errorDisplay.setContextualBackground(ContextualBackground.DANGER);
+
         FieldSet p = new FieldSet();
         addWidgets(p);
         add(p);
@@ -48,7 +51,7 @@ public class PhoneCallForm extends Form {
 
             if (!call.validate()) {
                 InvalidPhoneReason r = call.invalidBecause();
-                errorDisplay.setText("The thing was invalid because: " + r.toString());
+                errorDisplay.setText("Unable to submit: " + r.toString());
                 event.cancel();
                 return;
             }
